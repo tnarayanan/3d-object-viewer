@@ -1,90 +1,89 @@
-# TODO: replace `<your-project-moduleN>` with the modules that you implement for
-# your project.
-MY_MODULES = <your-project-module1>.o \
-			 <your-project-module2>.o \
-			 # ...
+# TODO: edit MY_MODULES to list modules in src/lib build into your project
+# TODO: edit APPLICATION to name of project application from src/apps
+# TODO: edit TEST to name of unit test program from src/tests
 
+MY_MODULES = project-module.o
 
-# Paths to binaries.
-# TODO: replace `<your-project-app>` with the name of your project's
-# application (suffix excluded).
-# TODO: replace `<your-project-tests>` with the name of your project's tests
-# (suffix excluded).
-APPLICATION = build/bin/<your-project-app>.bin
-TEST 		= build/bin/<your-project-tests>.bin
+# Targets for this makefile
+APPLICATION = build/project-app.bin
+TEST 	    = build/project-tests.bin
 
-# Use order-only prerequisite to create the build directory.
-# https://www.cmcrossroads.com/article/making-directories-gnu-make
-# This comment is floating all alone because a previous edition of this
-# Makefile had a macro for the build directory, but that has since been
-# removed.
+all: $(APPLICATION) $(TEST)
 
 # Object files needed to build the application binary.
-OBJECTS = $(addprefix build/obj/, $(MY_MODULES) start.o cstart.o)
+OBJECTS = $(addprefix build/, $(MY_MODULES) start.o cstart.o)
 
-# C compiler.
-CFLAGS_EXTRA = -Werror
-CFLAGS 	= -I$(CS107E)/include -Iinclude -Og -g -Wall -std=c99 -ffreestanding $(CFLAGS_EXTRA)
-CFLAGS += -mapcs-frame -fno-omit-frame-pointer -mpoke-function-name -Wpointer-arith
+# Flags for compile and link
+export warn = -Wall -Wpointer-arith -Wwrite-strings -Werror \
+        -Wno-error=unused-function -Wno-error=unused-variable \
+        -fno-diagnostics-show-option
+export freestanding = -ffreestanding -nostdinc \
+		-isystem $(shell arm-none-eabi-gcc -print-file-name=include)
+CFLAGS	= -I$(CS107E)/include -Og -g -std=c99 $$warn $$freestanding
+CFLAGS += -mapcs-frame -fno-omit-frame-pointer -mpoke-function-name
 LDFLAGS	= -nostdlib -T src/boot/memmap -L$(CS107E)/lib
-LDLIBS 	= -lpi -lgcc # TODO: link against any other libraries that you need for your project.
+LDLIBS 	= -lpi -lgcc
 
-# Search for .c and .s files in the src directory's subdirectories.
-# https://www.cmcrossroads.com/article/basics-vpath-and-vpath
-vpath %.c src/apps src/boot src/lib src/tests
-vpath %.s src/apps src/boot src/lib src/tests
+# Rules and recipes for all build steps
 
-
-all: $(APPLICATION) $(TEST) 
-
-# Ensure that `make <file>.<ext>` builds `<file>.<ext>` in `build/<ext>/`.
-%.bin: build/bin/%.bin ;
-%.elf: build/elf/%.elf ;
-%.o: build/obj/%.o ;
-%.list: build/list/%.list ;
-
-# Build *.bin from *.elf.
-build/bin/%.bin: build/elf/%.elf | build
+# Extract binary from elf
+build/%.bin: build/%.elf | build
 	arm-none-eabi-objcopy $< -O binary $@
 
-# Build *.elf from *.o.
-build/elf/%.elf: build/obj/%.o $(OBJECTS) | build
+# Link objects into elf executable
+build/%.elf: build/%.o $(OBJECTS) | build
 	arm-none-eabi-gcc $(LDFLAGS) $^ $(LDLIBS) -o $@
 
-# Build *.o from *.c.
-build/obj/%.o: %.c | build
+# Compile C file to object
+build/%.o: %.c | build
 	arm-none-eabi-gcc $(CFLAGS) -c $< -o $@
 
-# Build *.o from *.s.
-build/obj/%.o: %.s | build
+# Assemble asm to object
+build/%.o: %.s | build
 	arm-none-eabi-as $< -o $@
 
-# Build *.list from *.o.
-build/list/%.list: build/obj/%.o | build
+# Disassemble object file to asm listing
+build/%.list: build/%.o | build
 	arm-none-eabi-objdump --no-show-raw-insn -d $< > $@
 
-# Create build directory and its subdirectories.
+# Create build directory
 build:
-	mkdir -p build/obj build/elf build/bin build/list
-	
-# Build and run the application binary.
-install: $(APPLICATION) | build
-	rpi-install.py -p $<
+	mkdir -p build
 
-# Build and run the test binary.
-test: $(TEST) | build
-	rpi-install.py -p $<
+# Build and run the application binary
+run: $(APPLICATION)
+	rpi-run.py -p $<
+
+# Build and run the test binary
+test: $(TEST)
+	rpi-run.py -p $<
 
 # Remove the build directory (i.e. all the binary files).
 clean:
 	rm -rf build
 
+# The section below allows organizing files in subdirectories
+# source files stored in src/, build products in build/ and so on.
+# order-only prerequisite ensures build directory is created on demand
+# https://www.cmcrossroads.com/article/making-directories-gnu-make
+
+# Use vpath to search for .c and .s files
+# https://www.cmcrossroads.com/article/basics-vpath-and-vpath
+vpath %.c src/apps src/boot src/lib src/tests
+vpath %.s src/apps src/boot src/lib src/tests
+
+# Ensure that `make <file>` builds in `build/`
+%.bin: build/%.bin ;
+%.elf: build/%.elf ;
+%.o: build/%.o ;
+%.list: build/%.list ;
+
 # Identify targets that don't create a file.
 # https://www.gnu.org/software/make/manual/html_node/Phony-Targets.html
-.PHONY: all clean install test %.bin %.elf %.list %.o
+.PHONY: all clean run test %.bin %.elf %.list %.o
 
 # Prevent make from removing intermediate build artifacts.
-.PRECIOUS: build/bin/%.bin build/elf/%.elf build/list/%.list build/obj/%.o
+.PRECIOUS: build/%.bin build/%.elf build/%.list build/%.o
 
 # Disable all built-in rules.
 # https://www.gnu.org/software/make/manual/html_node/Suffix-Rules.html
@@ -101,3 +100,4 @@ endef
 ifndef CS107E
 $(error $(CS107E_ERROR_MESSAGE))
 endif
+
