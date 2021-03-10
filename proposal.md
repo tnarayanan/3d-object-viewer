@@ -1,6 +1,7 @@
 ## Project title
 
 ## Team members
+Ari Webb
 
 ## Project description
 Short description of the basic idea and end goal you are aiming for. 
