@@ -4,23 +4,6 @@
 #include <stdbool.h>
 #include <stdarg.h>
 
-/*unsigned int gpu_mem_alloc(size_t nbytes, size_t align, unsigned int flags) {
-    int i = 0;
-    unsigned int request[32];
-    request[i++] = 0; // size
-    request[i++] = 0;
-
-    request[i++] = 0x3000c; // tag
-    request[i++] = 12; // size of buffer
-    request[i++] = 12; // size of data
-    request[i++] = nbytes;
-    request[i++] = align;
-    request[i++] = flags;
-
-    request[i++] = 0;
-    
-}*/
-
 static unsigned int send_mailbox_request(unsigned int tag, int argc, ...) {
     va_list args;
     va_start(args, argc);

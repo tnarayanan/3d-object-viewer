@@ -29,7 +29,6 @@ void test_peek_poke(void) {
 }
 
 void test_gpio_on_off(void) {
-    //printf("in test_gpio_on_off\n");
     // assembly code to config, set, and clear gpio 20
     char program_config[14] = {
         0x01, 0xe8, 0x08, 0x00, 0x20, 0x7e, // movi r1, 0x7e200008
@@ -75,8 +74,10 @@ void test_gpu_program_from_file(void) {
 
 void main(void) {
     gpu_programs_init();
+
     test_peek_poke();
     //test_gpio_on_off();
     test_gpu_program_from_file();
+
     uart_putchar(EOT);
 }
