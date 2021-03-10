@@ -2,12 +2,8 @@
 #define GL_3D
 
 #include "gl.h"
-
-typedef struct {
-    float x;
-    float y;
-    float z;
-} point_t;
+#include "vector_math.h"
+#include "math.h"
 
 /*User should call gl_init first, initializing the fb. gl_3d_init initializes the z-buffer*/
 void gl_3d_init();

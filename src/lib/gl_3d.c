@@ -16,8 +16,9 @@ void gl_3d_init() {
 }
 
 
-void gl_3d_draw_triangle(point_t v1, point_t v2, point_t v3, point_t cam, point_t light){}
+void gl_3d_draw_triangle(point_t v1, point_t v2, point_t v3, point_t cam, point_t light) {
 
+}
 
 void gl_3d_clear(){
     gl_clear();
