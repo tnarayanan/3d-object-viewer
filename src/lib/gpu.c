@@ -4,7 +4,7 @@
 #include <stdbool.h>
 #include <stdarg.h>
 
-static unsigned int send_mailbox_request(unsigned int tag, int argc, ...) {
+unsigned int gpu_send_mailbox_request(unsigned int tag, int argc, ...) {
     va_list args;
     va_start(args, argc);
 
@@ -33,25 +33,25 @@ static unsigned int send_mailbox_request(unsigned int tag, int argc, ...) {
 }
 
 unsigned int gpu_get_serial_num(void) {
-    return send_mailbox_request(0x10004, 2, 0, 0);
+    return gpu_send_mailbox_request(0x10004, 2, 0, 0);
 }
 
 unsigned int gpu_mem_alloc(size_t nbytes, size_t align, unsigned int flags) {
-    return send_mailbox_request(0x3000c, 3, nbytes, align, flags);
+    return gpu_send_mailbox_request(0x3000c, 3, nbytes, align, flags);
 }
 
 unsigned int gpu_mem_free(unsigned int handle) {
-    return send_mailbox_request(0x3000f, 1, handle);
+    return gpu_send_mailbox_request(0x3000f, 1, handle);
 }
 
 void *gpu_mem_lock(unsigned int handle) {
-    return (void *) send_mailbox_request(0x3000d, 1, handle);
+    return (void *) gpu_send_mailbox_request(0x3000d, 1, handle);
 }
 
 unsigned int gpu_mem_unlock(unsigned int handle) {
-    return send_mailbox_request(0x3000e, 1, handle);
+    return gpu_send_mailbox_request(0x3000e, 1, handle);
 }
 
 unsigned int gpu_execute_code(unsigned int code, unsigned int r0, unsigned int r1, unsigned int r2, unsigned int r3, unsigned int r4, unsigned int r5) {
-    return send_mailbox_request(0x30010, 7, code, r0, r1, r2, r3, r4, r5);
+    return gpu_send_mailbox_request(0x30010, 7, code, r0, r1, r2, r3, r4, r5);
 }
