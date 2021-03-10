@@ -11,7 +11,7 @@ unsigned int gpu_send_mailbox_request(unsigned int tag, int argc, ...) {
     int i = 0;
     volatile unsigned int request[32] __attribute__ ((aligned(16)));
     request[i++] = 0; // size
-    request[i++] = 0;
+    request[i++] = 0; // process the request
 
     request[i++] = tag; // tag
     request[i++] = argc * sizeof(unsigned int); // size of buffer
