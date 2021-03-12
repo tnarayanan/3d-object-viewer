@@ -7,11 +7,14 @@ typedef struct {
     float z;
 } point_t;
 
-point_t add(point_t u, point_t v);
-point_t sub(point_t u, point_t v);
+point_t vector_add(point_t u, point_t v);
+point_t vector_sub(point_t u, point_t v);
 
-point_t cross_product(point_t u, point_t v);
+point_t vector_scalar_mul(point_t u, double k);
 
-point_t projection(point_t u, point_t v);
+point_t vector_cross_product(point_t u, point_t v);
+double vector_dot_product(point_t u, point_t v);
+
+point_t vector_projection(point_t u, point_t v);
 
 #endif
