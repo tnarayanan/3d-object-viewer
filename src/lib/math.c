@@ -3,15 +3,12 @@
 #include "assert.h"
 
 double sin(double angle) {
-    //printf("Starting angle: %d\n", (int) (angle * 10000));
     int multiplier = 1;
     if (angle < 0) {
-        //printf("Changing multiplier\n");
         multiplier = -1;
         angle *= -1;
     }
     angle -= ((int) (angle / (2 * PI))) * (2 * PI);
-    //printf("New angle: %d\n", (int) (angle * 10000));
     
     // angle is now between 0 and 2PI
 
@@ -19,7 +16,6 @@ double sin(double angle) {
         angle -= 2 * PI;
     }
 
-    //printf("New angle: %d\n", (int) (angle * 10000));
     // angle is now between -PI and PI
 
     if (angle > PI/2) {
@@ -29,7 +25,6 @@ double sin(double angle) {
     }
 
     // angle is now between -PI/2 and PI/2
-    //printf("After converting angle: %d\n", (int) (angle * 10000));
 
     double result = 0;
 

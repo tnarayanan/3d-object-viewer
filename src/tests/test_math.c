@@ -2,7 +2,7 @@
 #include "uart.h"
 #include "printf.h"
 
-void test_sin(void) {
+void test_trig(void) {
     for (float theta = -2*PI; theta <= 2*PI + 2; theta += PI/4) {
         int angle = theta * 10000;
         int result = sin(theta) * 10000;
@@ -38,7 +38,7 @@ void test_sqrt(void) {
 
 void main(void) {
     printf("Running math library tests...\n");
-    test_sin();
+    test_trig();
     test_sqrt();
     printf("Finished running math library tests\n");
     uart_putchar(EOT);

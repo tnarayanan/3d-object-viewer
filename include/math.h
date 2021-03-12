@@ -1,24 +1,34 @@
 #ifndef MATH_H
 #define MATH_H
 
+/*
+ * This module provides functions for basic math operations
+ * including trigonometry, absolute value, and square root.
+ *
+ * Author: Tejas Narayanan <tejasn100@gmail.com>
+ * Date: Mar 11 2021
+ */
+
 #define PI 3.14159
 
-/* absolute value */
-#define abs(x) (((x) < 0) ? (-(x)) : (x))
+inline double abs(double x) {
+	return (x < 0) ? -x : x;
+}
 
-/* angle in radians */
+/* input angle is in radians */
 double sin(double angle);
 
-/* angle in radians */
+/* input angle is in radians */
 inline double cos(double angle) {
     return sin(angle - PI/2);
 }
 
-/* angle in radians */
+/* input angle is in radians */
 inline double tan(double angle) {
 	return sin(angle) / cos(angle);
 }
 
+/* x must be a non-negative number */
 double sqrt(double x);
 
 #endif
