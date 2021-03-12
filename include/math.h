@@ -1,15 +1,34 @@
 #ifndef MATH_H
 #define MATH_H
 
-/* angle in radians */
-float sin(float angle);
+/*
+ * This module provides functions for basic math operations
+ * including trigonometry, absolute value, and square root.
+ *
+ * Author: Tejas Narayanan <tejasn100@gmail.com>
+ * Date: Mar 11 2021
+ */
 
-/* angle in radians */
-float cos(float angle);
+#define PI 3.14159
 
-/* angle in radians */
-float tan(float angle);
+inline double abs(double x) {
+	return (x < 0) ? -x : x;
+}
 
-float sqrt(float x);
+/* input angle is in radians */
+double sin(double angle);
+
+/* input angle is in radians */
+inline double cos(double angle) {
+    return sin(angle - PI/2);
+}
+
+/* input angle is in radians */
+inline double tan(double angle) {
+	return sin(angle) / cos(angle);
+}
+
+/* x must be a non-negative number */
+double sqrt(double x);
 
 #endif
