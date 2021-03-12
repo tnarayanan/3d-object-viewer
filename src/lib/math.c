@@ -1,5 +1,6 @@
 #include "math.h"
 #include "printf.h"
+#include "assert.h"
 
 double sin(double angle) {
     //printf("Starting angle: %d\n", (int) (angle * 10000));
@@ -47,5 +48,15 @@ double sin(double angle) {
 }
 
 double sqrt(double x) {
-    return 0;
+    assert(x >= 0);
+
+    double ans = x / 2;
+    double tmp = 0;
+
+    while (ans != tmp) {
+        tmp = ans;
+        ans = (x/tmp + tmp) / 2;
+    }
+    
+    return ans;
 }

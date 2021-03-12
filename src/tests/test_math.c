@@ -16,9 +16,30 @@ void test_sin(void) {
     printf("cos(%d) = %d\n", (int) (x * 10000), (int) (cos(x) * 10000));
 }
 
+void test_sqrt(void) {
+    double x = 64;
+    printf("sqrt(%d) = %d\n", (int) (x * 10000), (int) (sqrt(x) * 10000));
+
+    x = 81;
+    printf("sqrt(%d) = %d\n", (int) (x * 10000), (int) (sqrt(x) * 10000));
+
+    x = 0;
+    printf("sqrt(%d) = %d\n", (int) (x * 10000), (int) (sqrt(x) * 10000));
+
+    x = 37;
+    printf("sqrt(%d) = %d\n", (int) (x * 10000), (int) (sqrt(x) * 10000));
+
+    x = 91.45;
+    printf("sqrt(%d) = %d\n", (int) (x * 10000), (int) (sqrt(x) * 10000));
+
+    x = 9123.563;
+    printf("sqrt(%d) = %d\n", (int) (x * 10000), (int) (sqrt(x) * 10000));
+}
+
 void main(void) {
     printf("Running math library tests...\n");
     test_sin();
+    test_sqrt();
     printf("Finished running math library tests\n");
     uart_putchar(EOT);
 }
