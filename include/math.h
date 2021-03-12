@@ -1,15 +1,24 @@
 #ifndef MATH_H
 #define MATH_H
 
-/* angle in radians */
-float sin(float angle);
+#define PI 3.14159
+
+/* absolute value */
+#define abs(x) (((x) < 0) ? (-(x)) : (x))
 
 /* angle in radians */
-float cos(float angle);
+double sin(double angle);
 
 /* angle in radians */
-float tan(float angle);
+inline double cos(double angle) {
+    return sin(angle - PI/2);
+}
 
-float sqrt(float x);
+/* angle in radians */
+inline double tan(double angle) {
+	return sin(angle) / cos(angle);
+}
+
+double sqrt(double x);
 
 #endif
