@@ -35,14 +35,17 @@ static double min(double a, double b, double c){
 }
 
 void gl_3d_draw_triangle(point_t v1, point_t v2, point_t v3, point_t cam, point_t light, color_t c) {
-    double box_x_min = min(v1.x, v2.x, v3.x);
-    double box_x_max = max(v1.x, v2.x, v3.x);
+    
+    /*project the verticies of the triangle onto the screen*/
+    point_t *triangle[3] = {&v1, &v2, &v3};
+    for(int v = 0; v < 3; v++){
+        triangle[v]->x /= triangle[v]->z;
+        triangle[v]->y /= triangle[v]->z;
+    }
 
-    double box_y_min = min(v1.y, v2.y, v3.y);
-    double box_y_max = max(v1.y, v2.y, v3.y);
-
-    for(int box_x = box_x_min; box_x <= box_x_max; box_x++){
-        for(int box_y = box_y_min; box_y <= box_y_max; box_y++){
+    /*draws triangle in 2d space first by making bounding box of points to check then using edge formula to see if point is inside triangle*/
+    for(int box_x =  min(v1.x, v2.x, v3.x); box_x <= max(v1.x, v2.x, v3.x); box_x++){
+        for(int box_y = min(v1.y, v2.y, v3.y); box_y <= max(v1.y, v2.y, v3.y); box_y++){
             point_t in_tri = {.x = box_x, .y = box_y};
             if(edge(v1, v2, in_tri) && edge(v2, v3, in_tri) && edge(v3, v1, in_tri)){ 
                 gl_draw_pixel(box_x, box_y, c);
