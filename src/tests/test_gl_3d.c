@@ -68,14 +68,15 @@ void test_gl_3d_draw_triangle(void){
     double arr[16] = {1, 0, 0, 0,
                       0, 1, 0, 0,
                       0, 0, 1, 0,
-                      0, 100, -1, 1};
+                      250, 375, -10, 1};
     matrix_4_t *cam = mat_from_arr(arr);
     
     for (int i = 0; i < (sizeof(colors)/4); i++) {
         gl_3d_draw_triangle(v1, v2, v3, *cam, *cam, colors[i]);
-        v1.z += 1;
-        v2.z += 1;
-        v3.z += 1;
+        double diff = 10;
+        v1.z += diff;
+        v2.z += diff;
+        v3.z += diff;
         //arr[14] -= 10;
         cam = mat_from_arr(arr);
     }

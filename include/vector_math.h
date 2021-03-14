@@ -46,6 +46,8 @@ double vector_dot_product(point_t u, point_t v);
 
 point_t vector_projection(point_t u, point_t v);
 
+double vector_magnitude(point_t u);
+
 //matrix_4_t matrix_inverse(matrix_4_t m);
 
 matrix_4_t matmul_matrix_4_by_matrix_4(matrix_4_t m1, matrix_4_t m2);
