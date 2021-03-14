@@ -2,11 +2,11 @@
 # TODO: edit APPLICATION to name of project application from src/apps
 # TODO: edit TEST to name of unit test program from src/tests
 
-MY_MODULES = gpu.o gpu_programs.o math.o vector_math.o
+MY_MODULES = gpu.o gpu_programs.o math.o vector_math.o gl_3d.o
 
 # Targets for this makefile
 APPLICATION = build/project-app.bin
-TEST 	    = build/test_vector_math.bin
+TEST 	    = build/test_gl_3d.bin
 TINYASM		= tinyasm/build/gpu_blink.bin
 
 all: $(APPLICATION) $(TEST) $(TINYASM)
@@ -23,7 +23,7 @@ export freestanding = -ffreestanding -nostdinc \
 CFLAGS	= -I$(CS107E)/include -Iinclude/ -Og -g -std=c99 $$warn $$freestanding
 CFLAGS += -mapcs-frame -fno-omit-frame-pointer -mpoke-function-name
 LDFLAGS	= -nostdlib -T src/boot/memmap -L$(CS107E)/lib -L.
-LDLIBS 	= -lmypi -lpi -lgcc -lpisd
+LDLIBS 	= -lmypi -lpi -lpisd -lgcc
 
 # Rules and recipes for all build steps
 
