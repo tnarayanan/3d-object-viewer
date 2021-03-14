@@ -26,12 +26,12 @@ void test_gl_3d_draw_triangle(void){
     //gl_draw_pixel(v3.x, v3.y, GL_CYAN);
     
     color_t colors[6] = {GL_MAGENTA, GL_BLUE, GL_AMBER, GL_MOSS, GL_CYAN, GL_RED};
-    for(int i = 0; i < (sizeof(colors)/4); i++){
-        gl_3d_draw_triangle(v1, v2, v3, v1, v2, colors[i]);
-        v1.x += 50;
-        v2.x += 50;
-        v3.x += 50;
-    }
+    //for(int i = 0; i < (sizeof(colors)/4); i++){
+        //gl_3d_draw_triangle(v1, v2, v3, v1, v2, colors[i]);
+        //v1.x += 50;
+        //v2.x += 50;
+        //v3.x += 50;
+    //}
 
     v1 = (point_t) {.x = 250, .y = 350, .z = 1};
     v2 = (point_t) {.x = 200, .y = 400, .z = 1};
