@@ -51,6 +51,10 @@ point_t vector_projection(point_t u, point_t v) {
     return vector_scalar_mul(v, vector_dot_product(u, v) / vector_dot_product(v, v));
 }
 
+double vector_magnitude(point_t u) {
+    return sqrt(u.x * u.x + u.y * u.y + u.z * u.z);
+}
+
 matrix_4_t matmul_matrix_4_by_matrix_4(matrix_4_t m1, matrix_4_t m2) {
     double res[4][4];
     for (int i = 0; i < 4; i++) {

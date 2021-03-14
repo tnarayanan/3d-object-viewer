@@ -85,8 +85,12 @@ void gl_3d_draw_triangle(point_t v1, point_t v2, point_t v3, matrix_4_t cam, mat
     /*project the verticies of the triangle onto the screen*/
     point_t *triangle[3] = {&v1, &v2, &v3};
     for(int v = 0; v < 3; v++){
-        triangle[v]->x /= triangle[v]->z;
-        triangle[v]->y /= triangle[v]->z;
+        double mag = 0.01 * vector_magnitude(*triangle[v]);
+        printf("Mag: %d\n", (int) (10000 * mag));
+        //triangle[v]->x /= triangle[v]->z;
+        //triangle[v]->y /= triangle[v]->z;
+        triangle[v]->x /= mag;
+        triangle[v]->y /= mag;
     }
 
     /*draws triangle in 2d space first by making bounding box of points to check then using edge formula to see if point is inside triangle*/
