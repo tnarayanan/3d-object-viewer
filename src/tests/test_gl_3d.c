@@ -61,19 +61,19 @@ void test_gl_3d_draw_triangle(void){
         //v3.x += 50;
     //}
 
-    v1 = (point_t) {.x = 250, .y = 350, .z = 1};
-    v2 = (point_t) {.x = 200, .y = 400, .z = 1};
-    v3 = (point_t) {.x = 300, .y = 400, .z = 1};
+    v1 = (point_t) {.x = .250, .y = .350, .z = 1};
+    v2 = (point_t) {.x = .200, .y = .400, .z = 1};
+    v3 = (point_t) {.x = .300, .y = .400, .z = 1};
 
     double arr[16] = {1, 0, 0, 0,
                       0, 1, 0, 0,
                       0, 0, 1, 0,
-                      250, 375, -10, 1};
+                      .450, .575, -.10, 1};
     matrix_4_t *cam = mat_from_arr(arr);
     
     for (int i = 0; i < (sizeof(colors)/4); i++) {
         gl_3d_draw_triangle(v1, v2, v3, *cam, *cam, colors[i]);
-        double diff = 10;
+        double diff = .30;
         v1.z += diff;
         v2.z += diff;
         v3.z += diff;

@@ -3,6 +3,9 @@
 #include "printf.h"
 
 #define INFINITY 0xffffffff
+#define GLOBAL_WIDTH 2
+#define GLOBAL_HEIGHT 1.5
+
 static unsigned int *z_buf;
 
 static void clear_z_buf() {
@@ -37,6 +40,15 @@ static double min(double a, double b, double c){
 
 static void print_point(point_t v) {
     printf("Point: {%d, %d, %d}\n", (int) (10000 * v.x), (int) (10000 * v.y), (int) (10000 * v.z));
+}
+
+static point_t convert_to_pixels(point_t p) {
+    int width = gl_get_width();
+    int height = gl_get_height();
+    int new_x_coord = p.x * width / GLOBAL_WIDTH;
+    int new_y_coord = p.y * height / GLOBAL_HEIGHT;
+
+    return (point_t) {new_x_coord, new_y_coord, p.z};
 }
 
 void gl_3d_draw_triangle(point_t v1, point_t v2, point_t v3, matrix_4_t cam, matrix_4_t light, color_t c) {
@@ -85,21 +97,25 @@ void gl_3d_draw_triangle(point_t v1, point_t v2, point_t v3, matrix_4_t cam, mat
     /*project the verticies of the triangle onto the screen*/
     point_t *triangle[3] = {&v1, &v2, &v3};
     for(int v = 0; v < 3; v++){
-        double mag = 0.01 * vector_magnitude(*triangle[v]);
+        /*double mag = 0.01 * vector_magnitude(*triangle[v]);
         printf("Mag: %d\n", (int) (10000 * mag));
-        //triangle[v]->x /= triangle[v]->z;
-        //triangle[v]->y /= triangle[v]->z;
         triangle[v]->x /= mag;
-        triangle[v]->y /= mag;
+        triangle[v]->y /= mag;*/
+        triangle[v]->x /= triangle[v]->z;
+        triangle[v]->y /= triangle[v]->z;
     }
+
+    v1 = convert_to_pixels(v1);
+    v2 = convert_to_pixels(v2);
+    v3 = convert_to_pixels(v3);
 
     /*draws triangle in 2d space first by making bounding box of points to check then using edge formula to see if point is inside triangle*/
     int width = gl_get_width();
     int height = gl_get_height();
-    for(int box_x =  min(v1.x, v2.x, v3.x); box_x <= max(v1.x, v2.x, v3.x); box_x++){
-        for(int box_y = min(v1.y, v2.y, v3.y); box_y <= max(v1.y, v2.y, v3.y); box_y++){
+    for(int box_x =  min(v1.x, v2.x, v3.x); box_x <= max(v1.x, v2.x, v3.x); box_x++) {
+        for(int box_y = min(v1.y, v2.y, v3.y); box_y <= max(v1.y, v2.y, v3.y); box_y++) {
             point_t in_tri = {.x = box_x, .y = box_y};
-            if(edge(v1, v2, in_tri) && edge(v2, v3, in_tri) && edge(v3, v1, in_tri)){ 
+            if(edge(v1, v2, in_tri) && edge(v2, v3, in_tri) && edge(v3, v1, in_tri)) {
                 gl_draw_pixel(box_x + width/2, -box_y + height/2, c);
             }
         }
