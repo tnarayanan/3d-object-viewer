@@ -23,7 +23,7 @@ export freestanding = -ffreestanding -nostdinc \
 CFLAGS	= -I$(CS107E)/include -Iinclude/ -Og -g -std=c99 $$warn $$freestanding
 CFLAGS += -mapcs-frame -fno-omit-frame-pointer -mpoke-function-name
 LDFLAGS	= -nostdlib -T src/boot/memmap -L$(CS107E)/lib -L.
-LDLIBS 	= -lmypi -lpi -lpisd -lgcc
+LDLIBS 	= -lpi -lpisd -lgcc
 
 # Rules and recipes for all build steps
 
