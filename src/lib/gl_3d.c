@@ -16,11 +16,13 @@ static void clear_z_buf() {
 }
 
 void gl_3d_init(void) {
-    z_buf = malloc(sizeof(unsigned int) * gl_get_width() * gl_get_height());    
+    z_buf = malloc(sizeof(unsigned int) * gl_get_width() * gl_get_height());
+    //clear the z buff on initialization
+    clear_z_buf();    
 }
 
-static int edge(point_t v1, point_t v2, point_t p){
-    return ((p.x - v1.x) * (v2.y - v1.y) - (p.y - v1.y) * (v2.x - v1.x) >= 0);
+static double edge(point_t v1, point_t v2, point_t p){
+    return ((p.x - v1.x) * (v2.y - v1.y) - (p.y - v1.y) * (v2.x - v1.x));
 }
 
 
@@ -49,6 +51,15 @@ static point_t convert_to_pixels(point_t p) {
     int new_y_coord = p.y * height / GLOBAL_HEIGHT;
 
     return (point_t) {new_x_coord, new_y_coord, p.z};
+}
+
+//static double compute_shading(matrix_4_t light, ) {
+    
+//}
+
+static double compute_depth(point_t v1, point_t v2, point_t v3, point_t p){
+    double area_full_tri = edge(v1, v2, v3);
+    return ((edge(v2, v3, p)*v1.z)/area_full_tri + (edge(v3, v1, p)*v2.z)/area_full_tri + (edge(v1, v2, p)*v3.z)/area_full_tri);
 }
 
 void gl_3d_draw_triangle(point_t v1, point_t v2, point_t v3, matrix_4_t cam, matrix_4_t light, color_t c) {
@@ -81,17 +92,17 @@ void gl_3d_draw_triangle(point_t v1, point_t v2, point_t v3, matrix_4_t cam, mat
     view.m[2][3] = -vector_dot_product(cam_z, cam_eye);
     view.m[3][3] = 1;
 
-    printf("m[3][0]: %d\n", (int) (10000 * view.m[3][0]));
-    printf("m[3][1]: %d\n", (int) (10000 * view.m[3][1]));
-    printf("m[3][2]: %d\n", (int) (10000 * view.m[3][2]));
+    //printf("m[3][0]: %d\n", (int) (10000 * view.m[3][0]));
+    //printf("m[3][1]: %d\n", (int) (10000 * view.m[3][1]));
+    //printf("m[3][2]: %d\n", (int) (10000 * view.m[3][2]));
 
-    print_point(v1);
+    //print_point(v1);
 
     v1 = matmul_point_by_matrix_4(v1, view);
     v2 = matmul_point_by_matrix_4(v2, view);
     v3 = matmul_point_by_matrix_4(v3, view);
 
-    print_point(v1);
+    //print_point(v1);
     
 
     /*project the verticies of the triangle onto the screen*/
@@ -115,7 +126,12 @@ void gl_3d_draw_triangle(point_t v1, point_t v2, point_t v3, matrix_4_t cam, mat
     for(int box_x =  min(v1.x, v2.x, v3.x); box_x <= max(v1.x, v2.x, v3.x); box_x++) {
         for(int box_y = min(v1.y, v2.y, v3.y); box_y <= max(v1.y, v2.y, v3.y); box_y++) {
             point_t in_tri = {.x = box_x, .y = box_y};
-            if(edge(v1, v2, in_tri) && edge(v2, v3, in_tri) && edge(v3, v1, in_tri)) {
+            if(edge(v1, v2, in_tri) >= 0 && edge(v2, v3, in_tri) >= 0 && edge(v3, v1, in_tri) >= 0) {
+                point_t point = {box_x, box_y, 1};
+                double z = compute_depth(v1, v2, v3, point);
+                printf("%d\n", (int)(z*10000));
+                //unsigned int (*z_buf_2d)[width] = (void *)z_buf;
+                //if (z < *cur_z) *cur_z = z;
                 gl_draw_pixel(box_x + width/2, -box_y + height/2, c);
             }
         }

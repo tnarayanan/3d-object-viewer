@@ -112,6 +112,20 @@ void test_gl_3d_view_matrix(void) {
 
 }*/
 
+void test_gl_3d_z_buf(void){
+    point_t v1 = {0, .2, 5};
+    point_t v2 = {.2, 0, 1};
+    point_t v3 = {-.2, 0, 1};
+
+    double arr[16] = {1, 0, 0, 0,
+                      0, 1, 0, 0,
+                      0, 0, 1, 0,
+                      0, 0, -1, 1};
+    matrix_4_t *cam = mat_from_arr(arr);
+    
+    gl_3d_draw_triangle(v1, v2, v3, *cam, *cam, 0xff000f0f);   
+}
+
 void main(void) {
     const int WIDTH = 640;
     const int HEIGHT = 512;
@@ -122,9 +136,10 @@ void main(void) {
     printf("Running gl tests...\n");
 
     //test_gl_3d_clear();
-    test_gl_3d_draw_triangle();
+    //test_gl_3d_draw_triangle();
     //test_gl_3d_view_matrix();
     //test_gl_3d_transformed_triangle();
+    test_gl_3d_z_buf();
 
     printf("Finished running gl tests\n");
     uart_putchar(EOT);
