@@ -42,6 +42,9 @@ obj_model_t *obj_model_load(const char *path) {
         } else if (line[0] == 'f' && line[1] == ' ') {
             // face
             obj->num_faces++;
+        } else if (line[0] == 'v' && line[1] == 'n') {
+            // normal
+            obj->num_normals++;
         }
         free(line);
     } while (!reached_eof);
@@ -53,6 +56,9 @@ obj_model_t *obj_model_load(const char *path) {
 
     obj->faces = malloc(sizeof(obj_face_t) * obj->num_faces);
     int num_faces_processed = 0;
+    
+    obj->normals = malloc(sizeof(point_t) * obj->num_normals);
+    int num_normals_processed = 0;
 
     do {
         line = read_line(&fil);
@@ -99,8 +105,9 @@ obj_model_t *obj_model_load(const char *path) {
 
             unsigned int v_index = strtonum(&line[2], &next_non_num);
             strtonum(next_non_num + 1, &next_non_num); // skip slash
-            strtonum(next_non_num + 1, &next_non_num); // skip slash
+            unsigned int normal_index = strtonum(next_non_num + 1, &next_non_num); // skip slash
             face->v1 = &(obj->vertices[v_index-1]);
+            face->normal = &(obj->normals[normal_index-1]);
 
             v_index = strtonum(next_non_num + 1, &next_non_num); // skip space
             strtonum(next_non_num + 1, &next_non_num); // skip slash
@@ -109,6 +116,41 @@ obj_model_t *obj_model_load(const char *path) {
 
             v_index = strtonum(next_non_num + 1, &next_non_num); // skip space
             face->v3 = &(obj->vertices[v_index-1]);
+        } else if (line[0] == 'v' && line[1] == 'n') {
+            // normal
+            point_t *norm = &(obj->normals[num_normals_processed++]);
+            const char *next_non_num;
+            const char *start_num = line+3;
+
+            int mul = 1;
+            if (*start_num == '-') {
+                mul = -1;
+                start_num++; // skip a negative sign
+            }
+
+            unsigned int whole_part = strtonum(start_num, &next_non_num);
+            unsigned int dec_part = strtonum(next_non_num + 1, &next_non_num); // skip a decimal point
+            norm->x = mul * (whole_part + (dec_part / 10000.0));
+
+            mul = 1;
+            if (*(next_non_num + 1) == '-') {
+                mul = -1;
+                next_non_num++; // skip a negative sign
+            }
+
+            whole_part = strtonum(next_non_num + 1, &next_non_num); // skip a space
+            dec_part = strtonum(next_non_num + 1, &next_non_num); // skip a decimal point
+            norm->y = mul * (whole_part + (dec_part / 10000.0));
+
+            mul = 1;
+            if (*(next_non_num + 1) == '-') {
+                mul = -1;
+                next_non_num++; // skip a negative sign
+            }
+
+            whole_part = strtonum(next_non_num + 1, &next_non_num); // skip a space
+            dec_part = strtonum(next_non_num + 1, &next_non_num); // skip a decimal point
+            norm->z = mul * (whole_part + (dec_part / 10000.0));
         }
         free(line);
     } while (!reached_eof);
