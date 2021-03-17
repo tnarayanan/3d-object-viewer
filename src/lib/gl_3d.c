@@ -3,8 +3,8 @@
 #include "printf.h"
 
 #define INFINITY 0xffffffff
-#define GLOBAL_WIDTH 4
-#define GLOBAL_HEIGHT 3
+#define GLOBAL_WIDTH 1
+#define GLOBAL_HEIGHT 0.75
 
 static unsigned int *z_buf;
 
