@@ -1,6 +1,7 @@
 #include "gl_3d.h"
 #include "malloc.h"
 #include "printf.h"
+#include "fb.h"
 
 #define INFINITY 0xffffffff
 #define GLOBAL_WIDTH 1
@@ -155,10 +156,10 @@ void gl_3d_draw_triangle(point_t v1, point_t v2, point_t v3, matrix_4_t cam, mat
     int width = gl_get_width();
     int height = gl_get_height();
 
-    int box_x_min = min(v1.x, v2.x, v3.x);
-    int box_x_max = max(v1.x, v2.x, v3.x);
-    int box_y_min = min(v1.y, v2.y, v3.y);
-    int box_y_max = max(v1.y, v2.y, v3.y);
+    int box_x_min = min(v1.x, v2.x, v3.x) < -(width/2) ? -(width/2) : min(v1.x, v2.x, v3.x);
+    int box_x_max = max(v1.x, v2.x, v3.x) > width/2 ? width/2 : max(v1.x, v2.x, v3.x);
+    int box_y_min = min(v1.y, v2.y, v3.y) < -(height/2) ? height/2 : min(v1.y, v2.y, v3.y);
+    int box_y_max = max(v1.y, v2.y, v3.y) > height/2 ? height/2 : max(v1.y, v2.y, v3.y);
     
     //printf("Box x: %d --> %d\n", box_x_min, box_x_max);
     //printf("Box y: %d --> %d\n", box_y_min, box_y_max);
@@ -180,7 +181,10 @@ void gl_3d_draw_triangle(point_t v1, point_t v2, point_t v3, matrix_4_t cam, mat
                 //printf("%x\n", z_buf_2d[pixel_y][pixel_x]);
                 if (z < z_buf_2d[pixel_y][pixel_x]) {
                     z_buf_2d[pixel_y][pixel_x] = z;
-                    gl_draw_pixel(pixel_x, pixel_y, c);
+                    unsigned int per_row = fb_get_pitch()/4;
+                    unsigned int (*im)[per_row] = fb_get_draw_buffer();
+                    im[pixel_y][pixel_x] = c; 
+                    //gl_draw_pixel(pixel_x, pixel_y, c);
                 }
             }
         }
