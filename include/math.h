@@ -20,7 +20,7 @@ double sin(double angle);
 
 /* input angle is in radians */
 inline double cos(double angle) {
-    return sin(angle - PI/2);
+    return sin(PI/2 - angle);
 }
 
 /* input angle is in radians */

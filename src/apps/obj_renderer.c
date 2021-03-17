@@ -6,6 +6,7 @@
 #include "vector_math.h"
 #include "math.h"
 #include "malloc.h"
+#include "timer.h"
 
 matrix_4_t *mat_from_arr(double arr[16]) {
     matrix_4_t *mat = malloc(sizeof(matrix_4_t));
@@ -47,12 +48,12 @@ void main(void) {
     /*double arr[16] = {1, 0, 0, 0,
                       0, 1, 0, 0,
                       0, 0, 1, 0,
-                      1, 1, -5, 1};*/
-    double theta = PI/6;
+                      0, 0, -5, 1};*/
+    double theta = PI/4;
     double arr[16] = {cos(theta), 0, -sin(theta), 0,
                       0, 1, 0, 0,
                       sin(theta), 0, cos(theta), 0,
-                      1, 1, -5, 1};
+                      4, 4, -15, 1};
     matrix_4_t *cam = mat_from_arr(arr);
 
     printf("About to draw triangles\n");
@@ -65,6 +66,7 @@ void main(void) {
                 *cam,
                 colors[i % 6]);
         printf("Drew triangle #%d\n", i);
+        //timer_delay(1);
     }
     printf("Drew all triangles\n");
     
