@@ -46,7 +46,7 @@ void main(void) {
                 light,
                 //colors[i % 6]);
                 GL_WHITE);
-        printf("Drew triangle #%d\n", i);
+        //printf("Drew triangle #%d\n", i);
         //timer_delay(5);
     }
     printf("Drew all triangles\n");
