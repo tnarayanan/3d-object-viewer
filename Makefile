@@ -2,11 +2,11 @@
 # TODO: edit APPLICATION to name of project application from src/apps
 # TODO: edit TEST to name of unit test program from src/tests
 
-MY_MODULES = gpu.o gpu_programs.o math.o vector_math.o gl_3d.o
+MY_MODULES = gpu.o gpu_programs.o math.o vector_math.o gl_3d.o obj_parser.o
 
 # Targets for this makefile
 APPLICATION = build/project-app.bin
-TEST 	    = build/test_gl_3d.bin
+TEST 	    = build/test_obj_parser.bin
 TINYASM		= tinyasm/build/gpu_blink.bin
 
 all: $(APPLICATION) $(TEST) $(TINYASM)
