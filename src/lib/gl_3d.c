@@ -16,11 +16,13 @@ static void clear_z_buf() {
 }
 
 void gl_3d_init(void) {
-    z_buf = malloc(sizeof(unsigned int) * gl_get_width() * gl_get_height());    
+    z_buf = malloc(sizeof(unsigned int) * gl_get_width() * gl_get_height());
+    //clear the z buff on initialization
+    clear_z_buf();    
 }
 
-static int edge(point_t v1, point_t v2, point_t p){
-    return ((p.x - v1.x) * (v2.y - v1.y) - (p.y - v1.y) * (v2.x - v1.x) >= 0);
+static double edge(point_t v1, point_t v2, point_t p){
+    return ((p.x - v1.x) * (v2.y - v1.y) - (p.y - v1.y) * (v2.x - v1.x));
 }
 
 
@@ -51,8 +53,28 @@ static point_t convert_to_pixels(point_t p) {
     return (point_t) {new_x_coord, new_y_coord, p.z};
 }
 
+/*Takes in color c and double brightness between 0 and 1 and scales c by brightness then returns c*/
+color_t compute_shade(color_t c, double brightness) {
+    color_t ret = 0xff000000;
+    ret |= (unsigned char)(((c >> 16) & 0xff) * brightness) << 16;
+    ret |= (unsigned char)(((c >> 8) & 0xff) * brightness) << 8;
+    ret |= (unsigned char)((c & 0xff) * brightness);
+    return ret;
+}
+
+static double compute_depth(point_t v1, point_t v2, point_t v3, point_t p){
+    double area_full_tri = edge(v1, v2, v3);
+    return ((edge(v2, v3, p)*v1.z)/area_full_tri + (edge(v3, v1, p)*v2.z)/area_full_tri + (edge(v1, v2, p)*v3.z)/area_full_tri);
+}
+
 void gl_3d_draw_triangle(point_t v1, point_t v2, point_t v3, matrix_4_t cam, matrix_4_t light, color_t c) {
 
+    //distant light source scaling of color
+    //point_t normal_to_tri = vector_cross_product(vector_sub(v3, v1), vector_sub(v2, v1));
+    
+    
+    // c = compute_shade(c, );
+    
     // https://www.3dgep.com/understanding-the-view-matrix/#Look_At_Camera
 
     matrix_4_t view;
@@ -81,18 +103,17 @@ void gl_3d_draw_triangle(point_t v1, point_t v2, point_t v3, matrix_4_t cam, mat
     view.m[2][3] = -vector_dot_product(cam_z, cam_eye);
     view.m[3][3] = 1;
 
-    printf("m[3][0]: %d\n", (int) (10000 * view.m[3][0]));
-    printf("m[3][1]: %d\n", (int) (10000 * view.m[3][1]));
-    printf("m[3][2]: %d\n", (int) (10000 * view.m[3][2]));
+    //printf("m[3][0]: %d\n", (int) (10000 * view.m[3][0]));
+    //printf("m[3][1]: %d\n", (int) (10000 * view.m[3][1]));
+    //printf("m[3][2]: %d\n", (int) (10000 * view.m[3][2]));
 
-    print_point(v3);
+    //print_point(v1);
 
     v1 = matmul_point_by_matrix_4(v1, view);
     v2 = matmul_point_by_matrix_4(v2, view);
     v3 = matmul_point_by_matrix_4(v3, view);
 
-    print_point(v3);
-    
+    //print_point(v1);
 
     /*project the verticies of the triangle onto the screen*/
     point_t *triangle[3] = {&v1, &v2, &v3};
@@ -111,7 +132,7 @@ void gl_3d_draw_triangle(point_t v1, point_t v2, point_t v3, matrix_4_t cam, mat
 
     print_point(v3);
 
-    printf("About to iterate over pixels\n");
+    //printf("About to iterate over pixels\n");
 
     /*draws triangle in 2d space first by making bounding box of points to check then using edge formula to see if point is inside triangle*/
     int width = gl_get_width();
@@ -122,14 +143,24 @@ void gl_3d_draw_triangle(point_t v1, point_t v2, point_t v3, matrix_4_t cam, mat
     int box_y_min = min(v1.y, v2.y, v3.y);
     int box_y_max = max(v1.y, v2.y, v3.y);
     
-    printf("Box x: %d --> %d\n", box_x_min, box_x_max);
-    printf("Box y: %d --> %d\n", box_y_min, box_y_max);
+    //printf("Box x: %d --> %d\n", box_x_min, box_x_max);
+    //printf("Box y: %d --> %d\n", box_y_min, box_y_max);
 
     for(int box_x = box_x_min; box_x <= box_x_max; box_x++) {
         for(int box_y = box_y_min; box_y <= box_y_max; box_y++) {
             point_t in_tri = {.x = box_x, .y = box_y};
-            if(edge(v1, v2, in_tri) && edge(v2, v3, in_tri) && edge(v3, v1, in_tri)) {
-                gl_draw_pixel(box_x + width/2, -box_y + height/2, c);
+            if(edge(v1, v2, in_tri) >= 0 && edge(v2, v3, in_tri) >= 0 && edge(v3, v1, in_tri) >= 0) {
+                point_t point = {box_x, box_y, 1};
+                unsigned int pixel_x = box_x + width/2;
+                unsigned int pixel_y = -box_y + height/2;
+                double z = compute_depth(v1, v2, v3, point);
+                //printf("%d\n", (int)(z*10000));
+                unsigned int (*z_buf_2d)[width] = (void *)z_buf;
+                //printf("%x\n", z_buf_2d[pixel_y][pixel_x]);
+                if (z < z_buf_2d[pixel_y][pixel_x]) {
+                    z_buf_2d[pixel_y][pixel_x] = z;
+                    gl_draw_pixel(pixel_x, pixel_y, c);
+                }
             }
         }
     }
