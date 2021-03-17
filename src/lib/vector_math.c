@@ -56,17 +56,16 @@ double vector_magnitude(point_t u) {
 }
 
 matrix_4_t matmul_matrix_4_by_matrix_4(matrix_4_t m1, matrix_4_t m2) {
-    double res[4][4];
+    matrix_4_t m_ret;
     for (int i = 0; i < 4; i++) {
         for (int j = 0; j < 4; j++) {
-            res[i][j] = 0;
+            m_ret.m[i][j] = 0;
             for (int k = 0; k < 4; k++) {
-                res[i][j] += m1.m[i][k] * m2.m[k][j];
+                m_ret.m[i][j] += m1.m[i][k] * m2.m[k][j];
             }
         }
     }
-    matrix_4_t m_ret;
-    m_ret.m[0][0] = 3;
+    //m_ret.m[0][0] = 3;
     //m_ret.m = res;
 
     return m_ret;

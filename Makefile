@@ -2,7 +2,7 @@
 # TODO: edit APPLICATION to name of project application from src/apps
 # TODO: edit TEST to name of unit test program from src/tests
 
-MY_MODULES = gpu.o gpu_programs.o math.o vector_math.o gl_3d.o obj_parser.o
+MY_MODULES = gpu.o gpu_programs.o math.o vector_math.o gl_3d.o obj_parser.o transform.o
 
 # Targets for this makefile
 APPLICATION = build/obj_renderer.bin

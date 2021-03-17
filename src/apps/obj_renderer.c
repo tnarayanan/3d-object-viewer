@@ -7,32 +7,7 @@
 #include "math.h"
 #include "malloc.h"
 #include "timer.h"
-
-matrix_4_t *mat_from_arr(double arr[16]) {
-    matrix_4_t *mat = malloc(sizeof(matrix_4_t));
-
-    mat->m[0][0] = arr[0];
-    mat->m[1][0] = arr[1];
-    mat->m[2][0] = arr[2];
-    mat->m[3][0] = arr[3];
-
-    mat->m[0][1] = arr[4];
-    mat->m[1][1] = arr[5];
-    mat->m[2][1] = arr[6];
-    mat->m[3][1] = arr[7];
-
-    mat->m[0][2] = arr[8];
-    mat->m[1][2] = arr[9];
-    mat->m[2][2] = arr[10];
-    mat->m[3][2] = arr[11];
-
-    mat->m[0][3] = arr[12];
-    mat->m[1][3] = arr[13];
-    mat->m[2][3] = arr[14];
-    mat->m[3][3] = arr[15];
-
-    return mat;
-}
+#include "transform.h"
 
 void main(void) {
     uart_init();
@@ -43,18 +18,12 @@ void main(void) {
     gl_3d_clear(GL_BLACK);
 
     obj_model_t *cube = obj_model_load("cube.obj");
-    color_t colors[6] = {GL_MAGENTA, GL_BLUE, GL_AMBER, GL_MOSS, GL_CYAN, GL_RED};
+    color_t colors[6] = {GL_AMBER, GL_MAGENTA, GL_BLUE, GL_MOSS, GL_CYAN, GL_RED};
 
-    /*double arr[16] = {1, 0, 0, 0,
-                      0, 1, 0, 0,
-                      0, 0, 1, 0,
-                      0, 0, -5, 1};*/
-    double theta = PI/4;
-    double arr[16] = {cos(theta), 0, -sin(theta), 0,
-                      0, 1, 0, 0,
-                      sin(theta), 0, cos(theta), 0,
-                      4, 4, -15, 1};
-    matrix_4_t *cam = mat_from_arr(arr);
+    matrix_4_t cam;
+    cam = transform_reset_rotation(cam);
+    cam = transform_set_position(cam, 0, 3, -7);
+    cam = transform_rotate_y(cam, PI/4);
 
     printf("About to draw triangles\n");
     for (int i = 0; i < cube->num_faces; i++) {
@@ -62,8 +31,8 @@ void main(void) {
                 *(cube->faces[i].v1),
                 *(cube->faces[i].v2),
                 *(cube->faces[i].v3),
-                *cam, 
-                *cam,
+                cam, 
+                cam,
                 colors[i % 6]);
         printf("Drew triangle #%d\n", i);
         //timer_delay(1);
