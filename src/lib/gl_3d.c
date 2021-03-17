@@ -56,9 +56,9 @@ static point_t convert_to_pixels(point_t p) {
 /*Takes in color c and double brightness between 0 and 1 and scales c by brightness then returns c*/
 color_t compute_shade(color_t c, double brightness) {
     color_t ret = 0xff000000;
-    ret |= (char)(((c >> 16) & 0xff) * brightness) << 16;
-    ret |= (char)(((c >> 8) & 0xff) * brightness) << 8;
-    ret |= (char)((c & 0xff) * brightness);
+    ret |= (unsigned char)(((c >> 16) & 0xff) * brightness) << 16;
+    ret |= (unsigned char)(((c >> 8) & 0xff) * brightness) << 8;
+    ret |= (unsigned char)((c & 0xff) * brightness);
     return ret;
     
 }
@@ -71,10 +71,10 @@ static double compute_depth(point_t v1, point_t v2, point_t v3, point_t p){
 void gl_3d_draw_triangle(point_t v1, point_t v2, point_t v3, matrix_4_t cam, matrix_4_t light, color_t c) {
 
     //distant light source scaling of color
-    point_t normal_to_tri = vector_cross_product(vector_sub(v3, v1), vector_sub(v2, v1));
+    //point_t normal_to_tri = vector_cross_product(vector_sub(v3, v1), vector_sub(v2, v1));
     
     
-    c = compute_shade(c, );
+   // c = compute_shade(c, );
     
     // https://www.3dgep.com/understanding-the-view-matrix/#Look_At_Camera
 
@@ -140,12 +140,15 @@ void gl_3d_draw_triangle(point_t v1, point_t v2, point_t v3, matrix_4_t cam, mat
             point_t in_tri = {.x = box_x, .y = box_y};
             if(edge(v1, v2, in_tri) >= 0 && edge(v2, v3, in_tri) >= 0 && edge(v3, v1, in_tri) >= 0) {
                 point_t point = {box_x, box_y, 1};
+                unsigned int pixel_x = box_x + width/2;
+                unsigned int pixel_y = -box_y + height/2;
                 double z = compute_depth(v1, v2, v3, point);
-                printf("%d\n", (int)(z*10000));
+                //printf("%d\n", (int)(z*10000));
                 unsigned int (*z_buf_2d)[width] = (void *)z_buf;
-                if (z < z_buf_2d[box_y][box_x]) {
-                    z_buf_2d[box_y][box_x] = z;
-                    gl_draw_pixel(box_x + width/2, -box_y + height/2, c);
+                //printf("%x\n", z_buf_2d[pixel_y][pixel_x]);
+                if (z < z_buf_2d[pixel_y][pixel_x]) {
+                    z_buf_2d[pixel_y][pixel_x] = z;
+                    gl_draw_pixel(pixel_x, pixel_y, c);
                 }
             }
         }
