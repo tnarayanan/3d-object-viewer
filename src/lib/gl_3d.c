@@ -67,13 +67,29 @@ static double compute_depth(point_t v1, point_t v2, point_t v3, point_t p){
     return ((edge(v2, v3, p)*v1.z)/area_full_tri + (edge(v3, v1, p)*v2.z)/area_full_tri + (edge(v1, v2, p)*v3.z)/area_full_tri);
 }
 
+void gl_3d_draw_triangle_with_normal(point_t v1, point_t v2, point_t v3, point_t normal, matrix_4_t cam, matrix_4_t light, color_t c) {
+    //distant light source scaling of color
+    print_point(normal);
+    point_t light_vec = {-light.m[0][2], -light.m[1][2], -light.m[2][2]};
+    //print_point(light_vec);
+
+    double cos_normal_light = vector_dot_product(normal, light_vec) / (vector_magnitude(normal) * vector_magnitude(light_vec));
+    printf("Cos normal: %d\n", (int) (10000 * cos_normal_light));
+    if (cos_normal_light < 0) cos_normal_light = 0;
+    c = compute_shade(c, cos_normal_light);
+
+    gl_3d_draw_triangle(v1, v2, v3, cam, light, c);
+}
+
 void gl_3d_draw_triangle(point_t v1, point_t v2, point_t v3, matrix_4_t cam, matrix_4_t light, color_t c) {
 
-    //distant light source scaling of color
-    //point_t normal_to_tri = vector_cross_product(vector_sub(v3, v1), vector_sub(v2, v1));
+    /*if (cos_normal_light < 0) {
+        normal_to_tri = (point_t) {-normal_to_tri.x, -normal_to_tri.y, -normal_to_tri.z};
+        cos_normal_light = vector_dot_product(normal_to_tri, light_vec) / (vector_magnitude(normal_to_tri) * vector_magnitude(light_vec));
+        printf("Cos normal: %d\n", (int) (10000 * cos_normal_light));
+    }*/
     
     
-    // c = compute_shade(c, );
     
     // https://www.3dgep.com/understanding-the-view-matrix/#Look_At_Camera
 
@@ -126,11 +142,12 @@ void gl_3d_draw_triangle(point_t v1, point_t v2, point_t v3, matrix_4_t cam, mat
         triangle[v]->y /= triangle[v]->z;
     }
 
+
     v1 = convert_to_pixels(v1);
     v2 = convert_to_pixels(v2);
     v3 = convert_to_pixels(v3);
 
-    print_point(v3);
+    //print_point(v3);
 
     //printf("About to iterate over pixels\n");
 
@@ -145,6 +162,10 @@ void gl_3d_draw_triangle(point_t v1, point_t v2, point_t v3, matrix_4_t cam, mat
     
     //printf("Box x: %d --> %d\n", box_x_min, box_x_max);
     //printf("Box y: %d --> %d\n", box_y_min, box_y_max);
+    
+    //gl_draw_line(v1.x + width/2, -v1.y + height/2, v2.x + width/2, -v2.y + height/2, GL_RED);
+    //gl_draw_line(v2.x + width/2, -v2.y + height/2, v3.x + width/2, -v3.y + height/2, GL_RED);
+    //gl_draw_line(v3.x + width/2, -v3.y + height/2, v1.x + width/2, -v1.y + height/2, GL_RED);
 
     for(int box_x = box_x_min; box_x <= box_x_max; box_x++) {
         for(int box_y = box_y_min; box_y <= box_y_max; box_y++) {

@@ -11,6 +11,8 @@ void gl_3d_init();
 /**/
 void gl_3d_draw_triangle(point_t v1, point_t v2, point_t v3, matrix_4_t cam, matrix_4_t light, color_t c);
 
+void gl_3d_draw_triangle_with_normal(point_t v1, point_t v2, point_t v3, point_t normal, matrix_4_t cam, matrix_4_t light, color_t c);
+
 /*Should call gl_clear but then also clear the z buffer*/
 void gl_3d_clear();
 
