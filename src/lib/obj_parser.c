@@ -25,6 +25,8 @@ static char *read_line(FIL *fil) {
 }
 
 obj_model_t *obj_model_load(const char *path) {
+    printf("Loading model '%s'...\n", path);
+
     obj_model_t *obj = malloc(sizeof(obj_model_t));
 
     FIL fil;
@@ -106,10 +108,11 @@ obj_model_t *obj_model_load(const char *path) {
             face->v2 = &(obj->vertices[v_index-1]);
 
             v_index = strtonum(next_non_num + 1, &next_non_num); // skip space
-            face->v2 = &(obj->vertices[v_index-1]);
+            face->v3 = &(obj->vertices[v_index-1]);
         }
         free(line);
     } while (!reached_eof);
 
+    printf("Finished loading model '%s'...\n", path);
     return obj;
 }
