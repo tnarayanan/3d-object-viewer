@@ -11,7 +11,7 @@
 
 void main(void) {
     uart_init();
-    gl_init(640, 512, GL_SINGLEBUFFER);
+    gl_init(640, 480, GL_SINGLEBUFFER);
     gl_3d_init();
     obj_model_init();
 
@@ -24,9 +24,10 @@ void main(void) {
     cam = transform_reset_rotation(cam);
     //cam = transform_set_position(cam, 0, 3, -5);
     //cam = transform_rotate_y(cam, PI/4);
-    cam = transform_set_position(cam, 0, 3, 5);
-    cam = transform_rotate_y(cam, PI);
+    cam = transform_set_position(cam, 0, 0, 10);
     cam = transform_rotate_z(cam, PI);
+    cam = transform_rotate_y(cam, PI);
+    //cam = transform_rotate_x(cam, PI/4);
 
     matrix_4_t light;
     light = transform_reset_rotation(light);
@@ -45,7 +46,7 @@ void main(void) {
                 light,
                 //colors[i % 6]);
                 GL_WHITE);
-        printf("Drew triangle #%d\n", i);
+        //printf("Drew triangle #%d\n", i);
         //timer_delay(5);
     }
     printf("Drew all triangles\n");
