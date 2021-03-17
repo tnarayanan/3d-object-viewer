@@ -113,17 +113,30 @@ void test_gl_3d_view_matrix(void) {
 }*/
 
 void test_gl_3d_z_buf(void){
-    point_t v1 = {0, .2, 5};
-    point_t v2 = {.2, 0, 1};
-    point_t v3 = {-.2, 0, 1};
+    point_t v1 = {0, .5, 1};
+    point_t v2 = {.5, 0, 1};
+    point_t v3 = {-.5, 0, 1};
 
     double arr[16] = {1, 0, 0, 0,
                       0, 1, 0, 0,
                       0, 0, 1, 0,
                       0, 0, -1, 1};
     matrix_4_t *cam = mat_from_arr(arr);
-    
-    gl_3d_draw_triangle(v1, v2, v3, *cam, *cam, 0xff000f0f);   
+    for (int i = 0; i < 10; i++){
+        gl_3d_draw_triangle(v1, v2, v3, *cam, *cam, GL_CYAN);
+	gl_3d_clear();
+	v2.z++;
+    }
+}
+
+void test_gl_3d_shading(void){
+    color_t compute_shade(color_t c, double brightness);
+    printf("%x\n", compute_shade(0xffee0000, .5));
+    printf("should be: 0xff770000\n");
+    printf("%x\n", compute_shade(0xffee2266, .5));
+    printf("should be: 0xff771133\n");
+    printf("%x\n", compute_shade(0xff5800a8, .25));
+    printf("should be: 0xff16002a\n");
 }
 
 void main(void) {
@@ -139,7 +152,8 @@ void main(void) {
     //test_gl_3d_draw_triangle();
     //test_gl_3d_view_matrix();
     //test_gl_3d_transformed_triangle();
-    test_gl_3d_z_buf();
+    //test_gl_3d_z_buf();
+    test_gl_3d_shading();
 
     printf("Finished running gl tests\n");
     uart_putchar(EOT);

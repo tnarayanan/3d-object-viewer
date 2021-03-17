@@ -53,9 +53,15 @@ static point_t convert_to_pixels(point_t p) {
     return (point_t) {new_x_coord, new_y_coord, p.z};
 }
 
-//static double compute_shading(matrix_4_t light, ) {
+/*Takes in color c and double brightness between 0 and 1 and scales c by brightness then returns c*/
+color_t compute_shade(color_t c, double brightness) {
+    color_t ret = 0xff000000;
+    ret |= (char)(((c >> 16) & 0xff) * brightness) << 16;
+    ret |= (char)(((c >> 8) & 0xff) * brightness) << 8;
+    ret |= (char)((c & 0xff) * brightness);
+    return ret;
     
-//}
+}
 
 static double compute_depth(point_t v1, point_t v2, point_t v3, point_t p){
     double area_full_tri = edge(v1, v2, v3);
@@ -64,6 +70,12 @@ static double compute_depth(point_t v1, point_t v2, point_t v3, point_t p){
 
 void gl_3d_draw_triangle(point_t v1, point_t v2, point_t v3, matrix_4_t cam, matrix_4_t light, color_t c) {
 
+    //distant light source scaling of color
+    point_t normal_to_tri = vector_cross_product(vector_sub(v3, v1), vector_sub(v2, v1));
+    
+    
+    c = compute_shade(c, );
+    
     // https://www.3dgep.com/understanding-the-view-matrix/#Look_At_Camera
 
     matrix_4_t view;
@@ -130,9 +142,11 @@ void gl_3d_draw_triangle(point_t v1, point_t v2, point_t v3, matrix_4_t cam, mat
                 point_t point = {box_x, box_y, 1};
                 double z = compute_depth(v1, v2, v3, point);
                 printf("%d\n", (int)(z*10000));
-                //unsigned int (*z_buf_2d)[width] = (void *)z_buf;
-                //if (z < *cur_z) *cur_z = z;
-                gl_draw_pixel(box_x + width/2, -box_y + height/2, c);
+                unsigned int (*z_buf_2d)[width] = (void *)z_buf;
+                if (z < z_buf_2d[box_y][box_x]) {
+                    z_buf_2d[box_y][box_x] = z;
+                    gl_draw_pixel(box_x + width/2, -box_y + height/2, c);
+                }
             }
         }
     }
