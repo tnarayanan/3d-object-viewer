@@ -21,19 +21,50 @@
 void circle_left() {}
 void circle_right() {}
 
+static matrix_4_t cube_cam, cube_light;
+static matrix_4_t monkey_cam, monkey_light;
+
+void initialize_matrices(void) {
+    cube_cam = transform_reset_rotation(cube_cam);
+    cube_cam = transform_set_position(cube_cam, 0, 5, -25);
+    cube_cam = transform_rotate_y(cube_cam, PI/4);
+
+    cube_light = transform_reset_rotation(cube_light);
+    cube_light = transform_rotate_y(cube_light, PI/3);
+    cube_light = transform_rotate_x(cube_light, PI/3);
+
+    monkey_cam = transform_reset_rotation(monkey_cam);
+    monkey_cam = transform_set_position(monkey_cam, 0, 0, 10);
+    monkey_cam = transform_rotate_z(monkey_cam, PI);
+    monkey_cam = transform_rotate_y(monkey_cam, PI);
+
+    monkey_light = transform_reset_rotation(monkey_light);
+    monkey_light = transform_rotate_x(monkey_light, PI/4);
+    monkey_light = transform_rotate_y(monkey_light, PI);
+}
+
 void render(char *filename) {
+    gl_3d_clear(GL_BLACK);
+    char buf[80];
+    buf[0] = 0;
+    strlcat(buf, "Loading ", sizeof(buf));
+    strlcat(buf, filename, sizeof(buf));
+    strlcat(buf, "...", sizeof(buf));
+    gl_draw_string(CURSOR_COL_WIDTH, 0, buf, GL_AMBER);
+
     obj_model_t *model = obj_model_load(filename);
+    gl_3d_clear(GL_BLACK);
 
     matrix_4_t cam;
-    cam = transform_reset_rotation(cam);
-    cam = transform_set_position(cam, 0, 0, 10);
-    cam = transform_rotate_z(cam, PI);
-    cam = transform_rotate_y(cam, PI);
-
     matrix_4_t light;
-    light = transform_reset_rotation(light);
-    light = transform_rotate_x(light, PI/4);
-    light = transform_rotate_y(light, PI);
+
+    if (strcmp(filename, "obj/cube.obj") == 0) {
+        cam = cube_cam;
+        light = cube_light;
+    } else if (strcmp(filename, "obj/monkey.obj") == 0) {
+        cam = monkey_cam;
+        light = monkey_light;
+    }
 
     while (true) {
         gl_3d_clear(GL_BLACK);
@@ -47,6 +78,7 @@ void render(char *filename) {
                 light,
                 GL_WHITE);
         }
+        printf("Rendered.\n");
 
         char ch = keyboard_read_next();
 
@@ -58,6 +90,23 @@ void render(char *filename) {
             cam.m[2][3]--; // zoom in
         } else if (ch == PS2_KEY_ARROW_DOWN) {
             cam.m[2][3]++; // zoom out
+        } else if (ch == 'r') {
+            // rotate
+            ch = keyboard_read_next();
+            double amt_to_rotate = PI/4;
+            if (ch == PS2_KEY_ARROW_DOWN) amt_to_rotate *= -1;
+
+            ch = keyboard_read_next();
+
+            if (ch == 'x') {
+                cam = transform_rotate_x(cam, amt_to_rotate);
+            } else if (ch == 'y') {
+                cam = transform_rotate_y(cam, amt_to_rotate);
+            } else if (ch == 'z') {
+                cam = transform_rotate_z(cam, amt_to_rotate);
+            } else if (ch == PS2_KEY_ESC) {
+                // escape
+            }
         } else if (ch == 'q') {
             break;
         }
@@ -70,6 +119,8 @@ void main(void) {
     gl_3d_init();
     obj_model_init();
     keyboard_init(KEYBOARD_CLOCK, KEYBOARD_DATA);
+
+    initialize_matrices();
 
     gl_3d_clear(GL_BLACK);
 

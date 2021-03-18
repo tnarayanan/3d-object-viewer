@@ -71,8 +71,8 @@ static double compute_depth(point_t v1, point_t v2, point_t v3, point_t p){
 void gl_3d_draw_triangle_with_normal(point_t v1, point_t v2, point_t v3, point_t normal, matrix_4_t cam, matrix_4_t light, color_t c) {
     
     // back face culling
-    point_t cam_z = {cam.m[0][2], cam.m[1][2], cam.m[2][2]};
-    if (vector_dot_product(normal, cam_z) >= 0) return;
+    /*point_t cam_z = {cam.m[0][2], cam.m[1][2], cam.m[2][2]};
+    if (vector_dot_product(normal, cam_z) >= 0) return;*/
 
     // color based on directional light source
     point_t light_vec = {-light.m[0][2], -light.m[1][2], -light.m[2][2]};
