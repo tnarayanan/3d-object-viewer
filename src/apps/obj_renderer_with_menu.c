@@ -10,6 +10,7 @@
 #include "ff.h"
 #include "strings.h"
 #include "assert.h"
+#include "timer.h"
 
 #define MAX_OBJ_FILES 10
 
@@ -19,7 +20,7 @@
 #define CURSOR_COL_WIDTH 30
 
 void circle_left(matrix_4_t *cam, matrix_4_t *light) {
-    *cam = transform_rotate_y(*cam, PI/4);
+    //*cam = transform_rotate_y(*cam, );
     *light = transform_rotate_y(*light, PI/4);
 }
 
@@ -129,7 +130,11 @@ void render(char *filename) {
             }
         } else if (ch == 'q') {
             break;
+        } else if (ch == 'z'){
+            draw_z_buf();
+            while (keyboard_read_next() != 'c');
         }
+        /*
         switch (ch) {
 	    case 'r':
 	        c = GL_RED;
@@ -167,7 +172,7 @@ void render(char *filename) {
 	    case 'w':
 	        c = GL_WHITE;
 		break;
-	}
+	}*/
     }
     gl_3d_clear(GL_BLACK);
 }

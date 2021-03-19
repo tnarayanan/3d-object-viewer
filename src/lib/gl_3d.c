@@ -2,6 +2,7 @@
 #include "malloc.h"
 #include "printf.h"
 #include "fb.h"
+#include "strings.h"
 
 #define INFINITY 0xffffffff
 #define GLOBAL_WIDTH 1
@@ -20,6 +21,40 @@ void gl_3d_init(void) {
     z_buf = malloc(sizeof(unsigned int) * gl_get_width() * gl_get_height());
     //clear the z buff on initialization
     clear_z_buf();    
+}
+
+/*Takes in color c and double brightness between 0 and 1 and scales c by brightness then returns c*/
+color_t compute_shade(color_t c, double brightness) {
+    color_t ret = 0xff000000;
+    ret |= (unsigned char)(((c >> 16) & 0xff) * brightness) << 16;
+    ret |= (unsigned char)(((c >> 8) & 0xff) * brightness) << 8;
+    ret |= (unsigned char)((c & 0xff) * brightness);
+    return ret;
+}
+
+void draw_z_buf() {
+    unsigned int *disp_z_buf = malloc(sizeof(unsigned int) * gl_get_width() * gl_get_height());
+    memcpy(disp_z_buf, z_buf, sizeof(unsigned int) * gl_get_width() * gl_get_height());
+    int size = gl_get_width() * gl_get_height();
+    for(int i = 0; i < size; i++){
+        if (disp_z_buf[i] == INFINITY) disp_z_buf[i] = 25;
+        disp_z_buf[i] = compute_shade(GL_WHITE, 1 - (disp_z_buf[i]/25)); 
+    }
+    /*
+    int height = gl_get_height();
+    int pitch = fb_get_pitch();
+    int width = gl_get_width();
+    unsigned int *fb = fb_get_draw_buffer();
+    for (int y = 0; y < height; y++){
+        for (int x = 0; x < width; x++){
+            fb[y*pitch + x] = disp_z_buf[y*width + x];
+        }
+    }
+    */
+    memcpy(fb_get_draw_buffer(), disp_z_buf, sizeof(unsigned int) * gl_get_width() * gl_get_height());  
+    //printf("zbuf");
+    free(disp_z_buf);
+    return;
 }
 
 static double edge(point_t v1, point_t v2, point_t p){
@@ -52,15 +87,6 @@ static point_t convert_to_pixels(point_t p) {
     int new_y_coord = p.y * height / ((double) GLOBAL_HEIGHT);
 
     return (point_t) {new_x_coord, new_y_coord, p.z};
-}
-
-/*Takes in color c and double brightness between 0 and 1 and scales c by brightness then returns c*/
-color_t compute_shade(color_t c, double brightness) {
-    color_t ret = 0xff000000;
-    ret |= (unsigned char)(((c >> 16) & 0xff) * brightness) << 16;
-    ret |= (unsigned char)(((c >> 8) & 0xff) * brightness) << 8;
-    ret |= (unsigned char)((c & 0xff) * brightness);
-    return ret;
 }
 
 static double compute_depth(point_t v1, point_t v2, point_t v3, point_t p){
@@ -160,6 +186,7 @@ void gl_3d_draw_triangle(point_t v1, point_t v2, point_t v3, matrix_4_t cam, mat
                 //printf("%x\n", z_buf_2d[pixel_y][pixel_x]);
                 if (z < z_buf_2d[pixel_y][pixel_x]) {
                     z_buf_2d[pixel_y][pixel_x] = z;
+                    //printf("%x\n", (int)z_buf_2d[pixel_y][pixel_x]);
                     im[pixel_y][pixel_x] = c; 
                     //gl_draw_pixel(pixel_x, pixel_y, c);
                 }
