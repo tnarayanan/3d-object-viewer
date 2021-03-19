@@ -263,7 +263,7 @@ void main(void) {
             strlcat(path, filepaths[selected], sizeof(path));
             render(path);
 
-            gl_draw_string(CURSOR_COL_WIDTH, 0, "3DOVE (3D Object ViewEr)", GL_AMBER);
+            gl_draw_string(CURSOR_COL_WIDTH, 0, "Welcome to 3DOVE (3D Object ViewEr)", GL_AMBER);
             gl_draw_string(CURSOR_COL_WIDTH, line_height, "Choose a file:", GL_AMBER);
             for (int i = 0; i < num_files; i++) {
                 gl_draw_string(CURSOR_COL_WIDTH, (i+line_offset) * line_height, filepaths[i], GL_AMBER);

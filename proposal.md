@@ -1,25 +1,31 @@
 ## Project title
+3DOVE: 3D Object Viewer
 
 ## Team members
-Ari Webb , Tejas Narayanan
-
+Ari Webb, Tejas Narayanan
 
 ## Project description
-Short description of the basic idea and end goal you are aiming for. 
-Include stretch goals and/or fallback position to indicate how you 
-might fine-tune the project scope if needed.
+A 3D object viewer that reads a .obj file and displays the 3D model.
+User interactivity is a nice-to-have, and GPU acceleration is a stretch
+goal.
 
 ## Hardware, budget
-Itemize what hardware, if any, you need and your plan for acquiring it.
-Rough budget for the project. Remember we will reimburse you up to $20 per person.
+No extra hardware needed other than a monitor.
 
 ## Major tasks, member responsibilities
-Major task breakdown and who is responsible for each task.
+**Ari**
+* Triangle drawing
+* Lighting calculations
+
+**Tejas**
+* Math and linear algebra libraries
+* .obj file parsing
+* GPU support (extra)
 
 ## Schedule, midpoint milestones
-What are the one-week goals you plan to meet for next week?
+* Monday 03/15: Triangle drawing
+* Wednesday 03/17: Lighting
+* Thursday 03/18: Final application
 
 ## Resources needed, issues
-Are there books/code/tools/materials that you need access to? 
-What are the possible risks to overcome? What are you concerned about? 
-How can we help you succeed?
+Resources related to computer graphics, specifically rendering techniques
