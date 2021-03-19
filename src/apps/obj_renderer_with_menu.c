@@ -111,59 +111,65 @@ void render(char *filename) {
 
         char ch = keyboard_read_next();
 
-        if (ch == PS2_KEY_ARROW_LEFT) {
-            angle -= PI/16;
-        } else if (ch == PS2_KEY_ARROW_RIGHT) {
-            angle += PI/16;
-        } else if (ch == PS2_KEY_ARROW_UP) {
-            dist--; // zoom in
-        } else if (ch == PS2_KEY_ARROW_DOWN) {
-            dist++; // zoom out
-        } else if (ch == 'q') {
-            break;
-        } else if (ch == 'z'){
-            draw_z_buf();
-            while (keyboard_read_next() != 'c');
-        }
+        if (ch == 'q') break;
         switch (ch) {
-	    case 'r':
-	        c = GL_RED;
-		break;
-	    case 'g':
-	        c = GL_GREEN;
-		break;
-	    case 'b':
-	        c = GL_BLUE;
-		break;
-	    case 'c':
-	        c = GL_CYAN;
-		break;
-	    case 'm':
-	        c = GL_MAGENTA;
-		break;
-	    case 'y':
-	        c = GL_YELLOW;
-		break;
-	    case 'a':
-	        c = GL_AMBER;
-		break;
-	    case 'o':
-	        c = GL_ORANGE;
-		break;
-	    case 'p':
-	        c = GL_PURPLE;
-		break;
-            case 'i':
-	        c = GL_INDIGO;
-		break;
-            case 's':
-	        c = GL_SILVER;
-		break;
-	    case 'w':
-	        c = GL_WHITE;
-		break;
+            case PS2_KEY_ARROW_LEFT:
+                angle -= PI/16;
+	            break;
+            case PS2_KEY_ARROW_RIGHT: 
+                angle += PI/16;
+	            break;
+		    case PS2_KEY_ARROW_UP:
+					dist--; // zoom in
+				break;
+		    case PS2_KEY_ARROW_DOWN:
+				dist++; // zoom out
+				break;
+			case 'z':
+				draw_z_buf();
+				while (keyboard_read_next() != 'z');
+				break;
+			case 'c':
+				switch (keyboard_read_next()){
+					case 'r':
+						c = GL_RED;
+						break;
+					case 'g':
+						c = GL_GREEN;
+						break;
+					case 'b':
+						c = GL_BLUE;
+						break;
+					case 'c':
+						c = GL_CYAN;
+						break;
+					case 'm':
+						c = GL_MAGENTA;
+						break;
+					case 'y':
+						c = GL_YELLOW;
+						break;
+					case 'a':
+						c = GL_AMBER;
+						break;
+					case 'o':
+						c = GL_ORANGE;
+						break;
+					case 'p':
+						c = GL_PURPLE;
+						break;
+					case 'i':
+						c = GL_INDIGO;
+						break;
+					case 's':
+						c = GL_SILVER;
+						break;
+					case 'w':
+						c = GL_WHITE;
+						break;
+				}
+	    }
 	}
-    }
     gl_3d_clear(GL_BLACK);
 }
 
