@@ -38,11 +38,11 @@ void initialize_matrices(void) {
 
     initial_cube_params = (initial_view_params_t) {
         PI/6,
-        0,
-        5,
-        PI/4,
-        14.12,
-        cube_light
+            0,
+            5,
+            PI/4,
+            14.12,
+            cube_light
     };
 
     matrix_4_t monkey_light = transform_reset_rotation(monkey_light);
@@ -51,11 +51,11 @@ void initialize_matrices(void) {
 
     initial_monkey_params = (initial_view_params_t) {
         0,
-        0,
-        0,
-        PI,
-        10,
-        monkey_light
+            0,
+            0,
+            PI,
+            10,
+            monkey_light
     };
 
     matrix_4_t wolf_light = transform_reset_rotation(wolf_light);
@@ -64,11 +64,11 @@ void initialize_matrices(void) {
 
     initial_wolf_params = (initial_view_params_t) {
         PI/8,
-        0,
-        3,
-        3*PI/4,
-        10,
-        wolf_light
+            0,
+            3,
+            3*PI/4,
+            10,
+            wolf_light
     };
 }
 
@@ -93,6 +93,12 @@ void render(char *filename) {
         init_params = initial_monkey_params;
     } else if (strcmp(filename, "obj/wolf.obj") == 0) {
         init_params = initial_wolf_params;
+    } else if (strcmp(filename, "obj/goat.obj") == 0) {
+        init_params = initial_wolf_params;
+    } else if (strcmp(filename, "obj/cat.obj") == 0) {
+        init_params = initial_wolf_params;
+    } else if (strcmp(filename, "obj/deer.obj") == 0) {
+        init_params = initial_wolf_params;
     } else {
         init_params = initial_cube_params; // some default value
     }
@@ -113,13 +119,13 @@ void render(char *filename) {
 
         for (int i = 0; i < model->num_faces; i++) {
             gl_3d_draw_triangle_with_normal(
-                *(model->faces[i].v1),
-                *(model->faces[i].v2),
-                *(model->faces[i].v3),
-                *(model->faces[i].normal),
-                cam, 
-                light,
-                c);
+                    *(model->faces[i].v1),
+                    *(model->faces[i].v2),
+                    *(model->faces[i].v3),
+                    *(model->faces[i].normal),
+                    cam, 
+                    light,
+                    c);
             //printf("Drew triangle #%d\n", i);
         }
         printf("Rendered.\n");
@@ -130,61 +136,62 @@ void render(char *filename) {
         switch (ch) {
             case PS2_KEY_ARROW_LEFT:
                 angle -= PI/16;
-	            break;
+                break;
             case PS2_KEY_ARROW_RIGHT: 
                 angle += PI/16;
-	            break;
-		    case PS2_KEY_ARROW_UP:
-					dist--; // zoom in
-				break;
-		    case PS2_KEY_ARROW_DOWN:
-				dist++; // zoom out
-				break;
-			case 'z':
-				draw_z_buf();
-				while (keyboard_read_next() != 'z');
-				break;
-			case 'c':
-				switch (keyboard_read_next()){
-					case 'r':
-						c = GL_RED;
-						break;
-					case 'g':
-						c = GL_GREEN;
-						break;
-					case 'b':
-						c = GL_BLUE;
-						break;
-					case 'c':
-						c = GL_CYAN;
-						break;
-					case 'm':
-						c = GL_MAGENTA;
-						break;
-					case 'y':
-						c = GL_YELLOW;
-						break;
-					case 'a':
-						c = GL_AMBER;
-						break;
-					case 'o':
-						c = GL_ORANGE;
-						break;
-					case 'p':
-						c = GL_PURPLE;
-						break;
-					case 'i':
-						c = GL_INDIGO;
-						break;
-					case 's':
-						c = GL_SILVER;
-						break;
-					case 'w':
-						c = GL_WHITE;
-						break;
-				}
-	    }
-	}
+                break;
+            case PS2_KEY_ARROW_UP:
+                dist--; // zoom in
+                break;
+            case PS2_KEY_ARROW_DOWN:
+                dist++; // zoom out
+                break;
+            case 'z':
+                draw_z_buf();
+                while (keyboard_read_next() != 'z');
+                break;
+            case 'c':
+                switch (keyboard_read_next()) {
+                    case 'r':
+                        c = GL_RED;
+                        break;
+                    case 'g':
+                        c = GL_GREEN;
+                        break;
+                    case 'b':
+                        c = GL_BLUE;
+                        break;
+                    case 'c':
+                        c = GL_CYAN;
+                        break;
+                    case 'm':
+                        c = GL_MAGENTA;
+                        break;
+                    case 'y':
+                        c = GL_YELLOW;
+                        break;
+                    case 'a':
+                        c = GL_AMBER;
+                        break;
+                    case 'o':
+                        c = GL_ORANGE;
+                        break;
+                    case 'p':
+                        c = GL_PURPLE;
+                        break;
+                    case 'i':
+                        c = GL_INDIGO;
+                        break;
+                    case 's':
+                        c = GL_SILVER;
+                        break;
+                    case 'w':
+                        c = GL_WHITE;
+                        break;
+                }
+                break;
+        }
+    }
     gl_3d_clear(GL_BLACK);
 }
 
@@ -255,7 +262,7 @@ void main(void) {
             strlcat(path, "obj/", sizeof(path));
             strlcat(path, filepaths[selected], sizeof(path));
             render(path);
-            
+
             gl_draw_string(CURSOR_COL_WIDTH, 0, "3DOVE (3D Object ViewEr)", GL_AMBER);
             gl_draw_string(CURSOR_COL_WIDTH, line_height, "Choose a file:", GL_AMBER);
             for (int i = 0; i < num_files; i++) {
