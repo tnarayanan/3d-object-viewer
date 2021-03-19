@@ -10,6 +10,7 @@
 #include "ff.h"
 #include "strings.h"
 #include "assert.h"
+#include "timer.h"
 
 #define MAX_OBJ_FILES 10
 
@@ -81,6 +82,7 @@ void render(char *filename) {
         init_params = initial_cube_params; // some default value
     }
 
+    color_t c = GL_WHITE;
     matrix_4_t cam;
     matrix_4_t light = init_params.light;
     float dist = init_params.initial_dist;
@@ -102,7 +104,7 @@ void render(char *filename) {
                 *(model->faces[i].normal),
                 cam, 
                 light,
-                GL_WHITE);
+                c);
             //printf("Drew triangle #%d\n", i);
         }
         printf("Rendered.\n");
@@ -119,7 +121,48 @@ void render(char *filename) {
             dist++; // zoom out
         } else if (ch == 'q') {
             break;
+        } else if (ch == 'z'){
+            draw_z_buf();
+            while (keyboard_read_next() != 'c');
         }
+        switch (ch) {
+	    case 'r':
+	        c = GL_RED;
+		break;
+	    case 'g':
+	        c = GL_GREEN;
+		break;
+	    case 'b':
+	        c = GL_BLUE;
+		break;
+	    case 'c':
+	        c = GL_CYAN;
+		break;
+	    case 'm':
+	        c = GL_MAGENTA;
+		break;
+	    case 'y':
+	        c = GL_YELLOW;
+		break;
+	    case 'a':
+	        c = GL_AMBER;
+		break;
+	    case 'o':
+	        c = GL_ORANGE;
+		break;
+	    case 'p':
+	        c = GL_PURPLE;
+		break;
+            case 'i':
+	        c = GL_INDIGO;
+		break;
+            case 's':
+	        c = GL_SILVER;
+		break;
+	    case 'w':
+	        c = GL_WHITE;
+		break;
+	}
     }
     gl_3d_clear(GL_BLACK);
 }
