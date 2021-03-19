@@ -28,24 +28,66 @@ void circle_right(matrix_4_t *cam, matrix_4_t *light) {
     *light = transform_rotate_y(*light, -PI/4);
 }
 
+static matrix_4_t cube_cam, cube_light;
+static matrix_4_t monkey_cam, monkey_light;
+
+void initialize_matrices(void) {
+    cube_cam = transform_reset_rotation(cube_cam);
+    cube_cam = transform_set_position(cube_cam, -10, 5, -10);
+    cube_cam = transform_rotate_y(cube_cam, PI/4);
+    cube_cam = transform_rotate_x(cube_cam, PI/6);
+
+    cube_light = transform_reset_rotation(cube_light);
+    cube_light = transform_rotate_y(cube_light, PI/3);
+    cube_light = transform_rotate_x(cube_light, PI/3);
+
+    monkey_cam = transform_reset_rotation(monkey_cam);
+    monkey_cam = transform_set_position(monkey_cam, 0, 0, 10);
+    monkey_cam = transform_rotate_y(monkey_cam, PI);
+
+    monkey_light = transform_reset_rotation(monkey_light);
+    monkey_light = transform_rotate_y(monkey_light, 5*PI/6);
+    monkey_light = transform_rotate_x(monkey_light, PI/6);
+}
+
 void render(char *filename) {
+    gl_3d_clear(GL_BLACK);
+    char buf[80];
+    buf[0] = 0;
+    strlcat(buf, "Loading ", sizeof(buf));
+    strlcat(buf, filename, sizeof(buf));
+    strlcat(buf, "...", sizeof(buf));
+    gl_draw_string(CURSOR_COL_WIDTH, 0, buf, GL_AMBER);
+
     obj_model_t *model = obj_model_load(filename);
+    gl_3d_clear(GL_BLACK);
 
     matrix_4_t cam;
-    cam = transform_reset_rotation(cam);
-    cam = transform_set_position(cam, 0, 0, 10);
-    cam = transform_rotate_z(cam, PI);
-    cam = transform_rotate_y(cam, PI);
-
     matrix_4_t light;
-    light = transform_reset_rotation(light);
-    light = transform_rotate_x(light, PI/4);
-    light = transform_rotate_y(light, PI);
+
+    if (strcmp(filename, "obj/cube.obj") == 0) {
+        cam = cube_cam;
+        light = cube_light;
+    } else if (strcmp(filename, "obj/monkey.obj") == 0) {
+        cam = monkey_cam;
+        light = monkey_light;
+    }
 
     color_t c = GL_WHITE;
 
     while (true) {
         gl_3d_clear(GL_BLACK);
+        point_t v1 = {0, 0, 0};
+        point_t v2 = {10, 0, 0};
+        point_t v3 = {10, 1, 0};
+        point_t v4 = {0, 10, 0};
+        point_t v5 = {0, 10, 1};
+        point_t v6 = {0, 0, 10};
+        point_t v7 = {1, 0, 10};
+        gl_3d_draw_triangle(v1, v2, v3, cam, light, GL_RED);
+        gl_3d_draw_triangle(v1, v4, v5, cam, light, GL_GREEN);
+        gl_3d_draw_triangle(v1, v6, v7, cam, light, GL_BLUE);
+
         for (int i = 0; i < model->num_faces; i++) {
             gl_3d_draw_triangle_with_normal(
                 *(model->faces[i].v1),
@@ -56,6 +98,7 @@ void render(char *filename) {
                 light,
                 c);
         }
+        printf("Rendered.\n");
 
         char ch = keyboard_read_next();
 
@@ -67,6 +110,23 @@ void render(char *filename) {
             cam.m[2][3]--; // zoom in
         } else if (ch == PS2_KEY_ARROW_DOWN) {
             cam.m[2][3]++; // zoom out
+        } else if (ch == 'r') {
+            // rotate
+            ch = keyboard_read_next();
+            double amt_to_rotate = PI/4;
+            if (ch == PS2_KEY_ARROW_DOWN) amt_to_rotate *= -1;
+
+            ch = keyboard_read_next();
+
+            if (ch == 'x') {
+                cam = transform_rotate_x(cam, amt_to_rotate);
+            } else if (ch == 'y') {
+                cam = transform_rotate_y(cam, amt_to_rotate);
+            } else if (ch == 'z') {
+                cam = transform_rotate_z(cam, amt_to_rotate);
+            } else if (ch == PS2_KEY_ESC) {
+                // escape
+            }
         } else if (ch == 'q') {
             break;
         }
@@ -117,6 +177,8 @@ void main(void) {
     gl_3d_init();
     obj_model_init();
     keyboard_init(KEYBOARD_CLOCK, KEYBOARD_DATA);
+
+    initialize_matrices();
 
     gl_3d_clear(GL_BLACK);
 
