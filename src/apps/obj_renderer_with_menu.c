@@ -18,8 +18,15 @@
 
 #define CURSOR_COL_WIDTH 30
 
-void circle_left() {}
-void circle_right() {}
+void circle_left(matrix_4_t *cam, matrix_4_t *light) {
+    *cam = transform_rotate_y(*cam, PI/4);
+    *light = transform_rotate_y(*light, PI/4);
+}
+
+void circle_right(matrix_4_t *cam, matrix_4_t *light) {
+    *cam = transform_rotate_y(*cam, -PI/4);  
+    *light = transform_rotate_y(*light, -PI/4);
+}
 
 void render(char *filename) {
     obj_model_t *model = obj_model_load(filename);
@@ -35,6 +42,8 @@ void render(char *filename) {
     light = transform_rotate_x(light, PI/4);
     light = transform_rotate_y(light, PI);
 
+    color_t c = GL_WHITE;
+
     while (true) {
         gl_3d_clear(GL_BLACK);
         for (int i = 0; i < model->num_faces; i++) {
@@ -45,15 +54,15 @@ void render(char *filename) {
                 *(model->faces[i].normal),
                 cam, 
                 light,
-                GL_WHITE);
+                c);
         }
 
         char ch = keyboard_read_next();
 
         if (ch == PS2_KEY_ARROW_LEFT) {
-            circle_left();
+            circle_left(&cam, &light);
         } else if (ch == PS2_KEY_ARROW_RIGHT) {
-            circle_right();
+            circle_right(&cam, &light);
         } else if (ch == PS2_KEY_ARROW_UP) {
             cam.m[2][3]--; // zoom in
         } else if (ch == PS2_KEY_ARROW_DOWN) {
@@ -61,6 +70,44 @@ void render(char *filename) {
         } else if (ch == 'q') {
             break;
         }
+        switch (ch) {
+	    case 'r':
+	        c = GL_RED;
+		break;
+	    case 'g':
+	        c = GL_GREEN;
+		break;
+	    case 'b':
+	        c = GL_BLUE;
+		break;
+	    case 'c':
+	        c = GL_CYAN;
+		break;
+	    case 'm':
+	        c = GL_MAGENTA;
+		break;
+	    case 'y':
+	        c = GL_YELLOW;
+		break;
+	    case 'a':
+	        c = GL_AMBER;
+		break;
+	    case 'o':
+	        c = GL_ORANGE;
+		break;
+	    case 'p':
+	        c = GL_PURPLE;
+		break;
+            case 'i':
+	        c = GL_INDIGO;
+		break;
+            case 's':
+	        c = GL_SILVER;
+		break;
+	    case 'w':
+	        c = GL_WHITE;
+		break;
+	}
     }
     gl_3d_clear(GL_BLACK);
 }
