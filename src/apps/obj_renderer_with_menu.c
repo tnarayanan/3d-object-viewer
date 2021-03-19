@@ -28,7 +28,7 @@ typedef struct {
     matrix_4_t light;
 } initial_view_params_t;
 
-static initial_view_params_t initial_cube_params, initial_monkey_params;
+static initial_view_params_t initial_cube_params, initial_monkey_params, initial_wolf_params;
 
 void initialize_matrices(void) {
 
@@ -57,6 +57,19 @@ void initialize_matrices(void) {
         10,
         monkey_light
     };
+
+    matrix_4_t wolf_light = transform_reset_rotation(wolf_light);
+    wolf_light = transform_rotate_y(wolf_light, 5*PI/6);
+    wolf_light = transform_rotate_x(wolf_light, PI/6);
+
+    initial_wolf_params = (initial_view_params_t) {
+        PI/8,
+        0,
+        3,
+        3*PI/4,
+        10,
+        wolf_light
+    };
 }
 
 void render(char *filename) {
@@ -78,6 +91,8 @@ void render(char *filename) {
         init_params = initial_cube_params;
     } else if (strcmp(filename, "obj/monkey.obj") == 0) {
         init_params = initial_monkey_params;
+    } else if (strcmp(filename, "obj/wolf.obj") == 0) {
+        init_params = initial_wolf_params;
     } else {
         init_params = initial_cube_params; // some default value
     }
