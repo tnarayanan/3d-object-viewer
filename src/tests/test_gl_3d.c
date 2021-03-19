@@ -113,9 +113,9 @@ void test_gl_3d_view_matrix(void) {
 }*/
 
 void test_gl_3d_z_buf(void){
-    point_t v1 = {0, .5, 1};
-    point_t v2 = {.5, 0, 1};
-    point_t v3 = {-.5, 0, 1};
+    point_t v1 = {0, .5, 7};
+    point_t v2 = {.5, 0, 7};
+    point_t v3 = {-.5, 0, 7};
 
     float arr[16] = {1, 0, 0, 0,
                       0, 1, 0, 0,
@@ -124,10 +124,13 @@ void test_gl_3d_z_buf(void){
     matrix_4_t *cam = mat_from_arr(arr);
     gl_3d_draw_triangle(v1, v2, v3, *cam, *cam, GL_CYAN);
     timer_delay(1);
-    v1 = (point_t){-.5, .5, 2};
-    v2 = (point_t){0, 0, 2};
-    v3 = (point_t){-1, 0, 2};
+    v1 = (point_t){-.5, .5, 8};
+    v2 = (point_t){0, 0, 8};
+    v3 = (point_t){-1, 0, 8};
     gl_3d_draw_triangle(v1, v2, v3, *cam, *cam, GL_RED);
+
+    timer_delay(2);
+    draw_z_buf();
     //for (int i = 0; i < 10; i++){
         //gl_3d_draw_triangle(v1, v2, v3, *cam, *cam, GL_CYAN);
 	//gl_3d_clear();
