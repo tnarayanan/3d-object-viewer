@@ -19,13 +19,13 @@ void test_trig(void) {
         printf("cos(%d) = %d.%d\n", angle, result, dec_part);
     }
 
-    double x = PI/2 + 6*PI;
+    float x = PI/2 + 6*PI;
     printf("sin(%d) = %d\n", (int) (x * 10000), (int) (sin(x) * 10000));
     printf("cos(%d) = %d\n", (int) (x * 10000), (int) (cos(x) * 10000));
 }
 
 void test_sqrt(void) {
-    double x = 64;
+    float x = 64;
     printf("sqrt(%d) = %d\n", (int) (x * 10000), (int) (sqrt(x) * 10000));
 
     x = 81;

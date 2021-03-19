@@ -11,16 +11,16 @@
  */
 
 typedef struct {
-    double x;
-    double y;
-    double z;
+    float x;
+    float y;
+    float z;
 } point_t;
 
 /*typedef struct {
-	double x;
-	double y;
-	double z;
-	double w;
+	float x;
+	float y;
+	float z;
+	float w;
 } vec_4_t;
 
 typedef struct {
@@ -31,22 +31,22 @@ typedef struct {
 } matrix_4_t;*/
 
 typedef struct {
-	double m[4][4];
+	float m[4][4];
 } matrix_4_t;
 
 point_t vector_add(point_t u, point_t v);
 
 point_t vector_sub(point_t u, point_t v);
 
-point_t vector_scalar_mul(point_t u, double k);
+point_t vector_scalar_mul(point_t u, float k);
 
 point_t vector_cross_product(point_t u, point_t v);
 
-double vector_dot_product(point_t u, point_t v);
+float vector_dot_product(point_t u, point_t v);
 
 point_t vector_projection(point_t u, point_t v);
 
-double vector_magnitude(point_t u);
+float vector_magnitude(point_t u);
 
 //matrix_4_t matrix_inverse(matrix_4_t m);
 

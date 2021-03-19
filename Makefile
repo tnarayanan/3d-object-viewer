@@ -20,7 +20,7 @@ export warn = -Wall -Wpointer-arith -Wwrite-strings -Werror \
         -fno-diagnostics-show-option
 export freestanding = -ffreestanding -nostdinc \
 		-isystem $(shell arm-none-eabi-gcc -print-file-name=include)
-CFLAGS	= -I$(CS107E)/include -Iinclude/ -Og -g -std=c99 $$warn $$freestanding
+CFLAGS	= -I$(CS107E)/include -Iinclude/ -O3 -g -std=c99 $$warn $$freestanding
 CFLAGS += -mapcs-frame -fno-omit-frame-pointer -mpoke-function-name
 LDFLAGS	= -nostdlib -T src/boot/memmap -L$(CS107E)/lib -L.
 LDLIBS 	= -lpi -lpisd -lgcc
