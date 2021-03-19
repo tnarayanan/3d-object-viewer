@@ -26,8 +26,9 @@ static matrix_4_t monkey_cam, monkey_light;
 
 void initialize_matrices(void) {
     cube_cam = transform_reset_rotation(cube_cam);
-    cube_cam = transform_set_position(cube_cam, 0, 5, -25);
+    cube_cam = transform_set_position(cube_cam, -10, 5, -10);
     cube_cam = transform_rotate_y(cube_cam, PI/4);
+    cube_cam = transform_rotate_x(cube_cam, PI/6);
 
     cube_light = transform_reset_rotation(cube_light);
     cube_light = transform_rotate_y(cube_light, PI/3);
@@ -35,12 +36,11 @@ void initialize_matrices(void) {
 
     monkey_cam = transform_reset_rotation(monkey_cam);
     monkey_cam = transform_set_position(monkey_cam, 0, 0, 10);
-    monkey_cam = transform_rotate_z(monkey_cam, PI);
     monkey_cam = transform_rotate_y(monkey_cam, PI);
 
     monkey_light = transform_reset_rotation(monkey_light);
-    monkey_light = transform_rotate_x(monkey_light, PI/4);
-    monkey_light = transform_rotate_y(monkey_light, PI);
+    monkey_light = transform_rotate_y(monkey_light, 5*PI/6);
+    monkey_light = transform_rotate_x(monkey_light, PI/6);
 }
 
 void render(char *filename) {
@@ -68,6 +68,17 @@ void render(char *filename) {
 
     while (true) {
         gl_3d_clear(GL_BLACK);
+        point_t v1 = {0, 0, 0};
+        point_t v2 = {10, 0, 0};
+        point_t v3 = {10, 1, 0};
+        point_t v4 = {0, 10, 0};
+        point_t v5 = {0, 10, 1};
+        point_t v6 = {0, 0, 10};
+        point_t v7 = {1, 0, 10};
+        gl_3d_draw_triangle(v1, v2, v3, cam, light, GL_RED);
+        gl_3d_draw_triangle(v1, v4, v5, cam, light, GL_GREEN);
+        gl_3d_draw_triangle(v1, v6, v7, cam, light, GL_BLUE);
+
         for (int i = 0; i < model->num_faces; i++) {
             gl_3d_draw_triangle_with_normal(
                 *(model->faces[i].v1),
