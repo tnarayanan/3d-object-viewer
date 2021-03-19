@@ -20,7 +20,7 @@ point_t vector_sub(point_t u, point_t v) {
     return ret;
 }
 
-point_t vector_scalar_mul(point_t u, double k) {
+point_t vector_scalar_mul(point_t u, float k) {
     point_t ret;
     ret.x = u.x * k; 
     ret.y = u.y * k; 
@@ -38,8 +38,8 @@ point_t vector_cross_product(point_t u, point_t v) {
     return cross;
 }
 
-double vector_dot_product(point_t u, point_t v) {
-    double dot = 0;
+float vector_dot_product(point_t u, point_t v) {
+    float dot = 0;
     dot += u.x * v.x;
     dot += u.y * v.y;
     dot += u.z * v.z;
@@ -51,7 +51,7 @@ point_t vector_projection(point_t u, point_t v) {
     return vector_scalar_mul(v, vector_dot_product(u, v) / vector_dot_product(v, v));
 }
 
-double vector_magnitude(point_t u) {
+float vector_magnitude(point_t u) {
     return sqrt(u.x * u.x + u.y * u.y + u.z * u.z);
 }
 
@@ -76,8 +76,8 @@ point_t matmul_point_by_matrix_4(point_t p, matrix_4_t m) {
     // so we should take the translation into account.
     // When rotating vectors, we set the last value to 0
     //printf("m[2][3] = %d\n", (int) (10000 * m.m[2][3]));
-    double p_mat[4] = {p.x, p.y, p.z, 1};
-    double res[3];
+    float p_mat[4] = {p.x, p.y, p.z, 1};
+    float res[3];
     for (int i = 0; i < 3; i++) {
         res[i] = 0;
         for (int k = 0; k < 4; k++) {

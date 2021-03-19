@@ -13,17 +13,17 @@
 
 #define MAX_OBJ_FILES 10
 
-#define WIDTH 540
-#define HEIGHT 405
+#define WIDTH 640
+#define HEIGHT 480
 
 #define CURSOR_COL_WIDTH 30
 
 typedef struct {
-    double rx;
-    double rz;
-    double y;
-    double initial_ry;
-    double initial_dist;
+    float rx;
+    float rz;
+    float y;
+    float initial_ry;
+    float initial_dist;
     matrix_4_t light;
 } initial_view_params_t;
 
@@ -83,8 +83,8 @@ void render(char *filename) {
 
     matrix_4_t cam;
     matrix_4_t light = init_params.light;
-    double dist = init_params.initial_dist;
-    double angle = init_params.initial_ry + PI;
+    float dist = init_params.initial_dist;
+    float angle = init_params.initial_ry + PI;
 
     while (true) {
         gl_3d_clear(GL_BLACK);

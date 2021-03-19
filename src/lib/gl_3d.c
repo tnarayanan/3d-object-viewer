@@ -7,7 +7,7 @@
 #define GLOBAL_WIDTH 1
 #define GLOBAL_HEIGHT 0.75
 
-#define ZBUF_T double
+#define ZBUF_T float
 
 static ZBUF_T *z_buf;
 
@@ -24,19 +24,19 @@ void gl_3d_init(void) {
     clear_z_buf();    
 }
 
-static double edge(point_t v1, point_t v2, point_t p){
+static float edge(point_t v1, point_t v2, point_t p){
     return ((p.x - v1.x) * (v2.y - v1.y) - (p.y - v1.y) * (v2.x - v1.x));
 }
 
-static double max(double a, double b, double c){
-    double max = a;
+static float max(float a, float b, float c){
+    float max = a;
     if(b > max) max = b;
     if(c > max) max = c;
     return max;
 }
 
-static double min(double a, double b, double c){
-    double min = a;
+static float min(float a, float b, float c){
+    float min = a;
     if(b < min) min = b;
     if(c < min) min = c;
     return min;
@@ -49,14 +49,14 @@ static double min(double a, double b, double c){
 static point_t convert_to_pixels(point_t p) {
     int width = gl_get_width();
     int height = gl_get_height();
-    int new_x_coord = p.x * width / ((double) GLOBAL_WIDTH);
-    int new_y_coord = p.y * height / ((double) GLOBAL_HEIGHT);
+    int new_x_coord = p.x * width / ((float) GLOBAL_WIDTH);
+    int new_y_coord = p.y * height / ((float) GLOBAL_HEIGHT);
 
     return (point_t) {new_x_coord, new_y_coord, p.z};
 }
 
-/*Takes in color c and double brightness between 0 and 1 and scales c by brightness then returns c*/
-color_t compute_shade(color_t c, double brightness) {
+/*Takes in color c and float brightness between 0 and 1 and scales c by brightness then returns c*/
+color_t compute_shade(color_t c, float brightness) {
     color_t ret = 0xff000000;
     ret |= (unsigned char)(((c >> 16) & 0xff) * brightness) << 16;
     ret |= (unsigned char)(((c >> 8) & 0xff) * brightness) << 8;
@@ -64,8 +64,8 @@ color_t compute_shade(color_t c, double brightness) {
     return ret;
 }
 
-static double compute_depth(point_t v1, point_t v2, point_t v3, point_t p){
-    double area_full_tri = edge(v1, v2, v3);
+static float compute_depth(point_t v1, point_t v2, point_t v3, point_t p){
+    float area_full_tri = edge(v1, v2, v3);
     return ((edge(v2, v3, p)*v1.z)/area_full_tri + (edge(v3, v1, p)*v2.z)/area_full_tri + (edge(v1, v2, p)*v3.z)/area_full_tri);
 }
 
@@ -78,7 +78,7 @@ void gl_3d_draw_triangle_with_normal(point_t v1, point_t v2, point_t v3, point_t
     // color based on directional light source
     point_t light_vec = {-light.m[0][2], -light.m[1][2], -light.m[2][2]};
 
-    double cos_normal_light = vector_dot_product(normal, light_vec) / (vector_magnitude(normal) * vector_magnitude(light_vec));
+    float cos_normal_light = vector_dot_product(normal, light_vec) / (vector_magnitude(normal) * vector_magnitude(light_vec));
     //printf("Cos normal: %d\n", (int) (10000 * cos_normal_light));
     if (cos_normal_light < 0) cos_normal_light = 0;
     c = compute_shade(c, cos_normal_light);
@@ -157,7 +157,7 @@ void gl_3d_draw_triangle(point_t v1, point_t v2, point_t v3, matrix_4_t cam, mat
                 point_t point = {box_x, box_y, 1};
                 unsigned int pixel_x = box_x + width/2;
                 unsigned int pixel_y = -box_y + height/2;
-                double z = compute_depth(v1, v2, v3, point);
+                float z = compute_depth(v1, v2, v3, point);
                 //printf("%d\n", (int)(z*10000));
                 //printf("%x\n", z_buf_2d[pixel_y][pixel_x]);
                 if (z < z_buf_2d[pixel_y][pixel_x]) {
