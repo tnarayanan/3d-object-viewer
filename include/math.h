@@ -11,24 +11,24 @@
 
 #define PI 3.14159
 
-inline double abs(double x) {
+inline float abs(float x) {
 	return (x < 0) ? -x : x;
 }
 
 /* input angle is in radians */
-double sin(double angle);
+float sin(float angle);
 
 /* input angle is in radians */
-inline double cos(double angle) {
+inline float cos(float angle) {
     return sin(PI/2 - angle);
 }
 
 /* input angle is in radians */
-inline double tan(double angle) {
+inline float tan(float angle) {
 	return sin(angle) / cos(angle);
 }
 
 /* x must be a non-negative number */
-double sqrt(double x);
+float sqrt(float x);
 
 #endif

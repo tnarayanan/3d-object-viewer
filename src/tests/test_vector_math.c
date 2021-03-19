@@ -27,7 +27,7 @@ void test_vector_add_sub(void) {
 
 void test_vector_scalar_mul(void) {
     point_t a = {1, 2, 3};
-    double k = 3;
+    float k = 3;
     
     point_t a_times_k = vector_scalar_mul(a, k);
     point_t expected_1 = {3, 6, 9};
@@ -81,16 +81,16 @@ void test_vector_dot_product(void) {
     point_t a = {2, 3, 4};
     point_t b = {5, 6, 7};
 
-    double a_dot_b = vector_dot_product(a, b);
-    double expected_1 = 56;
+    float a_dot_b = vector_dot_product(a, b);
+    float expected_1 = 56;
     printf("a dot b:  %d\n", (int) (a_dot_b * 10000));
     printf("Expected: %d\n", (int) (expected_1 * 10000));
 
     point_t c = {2.52, 7.12, -14.934};
     point_t d = {-5.912, 0.453, 9.182};
 
-    double c_dot_d = vector_dot_product(c, d);
-    double expected_2 = -148.796868;
+    float c_dot_d = vector_dot_product(c, d);
+    float expected_2 = -148.796868;
     printf("c dot d:  %d\n", (int) (c_dot_d * 10000));
     printf("Expected: %d\n", (int) (expected_2 * 10000));
 }

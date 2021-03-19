@@ -15,7 +15,7 @@ void test_gl_3d_clear(void){
     timer_delay(1);
 }
 
-matrix_4_t *mat_from_arr(double arr[16]) {
+matrix_4_t *mat_from_arr(float arr[16]) {
     matrix_4_t *mat = malloc(sizeof(matrix_4_t));
 
     mat->m[0][0] = arr[0];
@@ -65,7 +65,7 @@ void test_gl_3d_draw_triangle(void){
     v2 = (point_t) {.x = .200, .y = .400, .z = 1};
     v3 = (point_t) {.x = .300, .y = .400, .z = 1};
 
-    double arr[16] = {1, 0, 0, 0,
+    float arr[16] = {1, 0, 0, 0,
                       0, 1, 0, 0,
                       0, 0, 1, 0,
                       .450, .575, -.10, 1};
@@ -73,7 +73,7 @@ void test_gl_3d_draw_triangle(void){
     
     for (int i = 0; i < (sizeof(colors)/4); i++) {
         gl_3d_draw_triangle(v1, v2, v3, *cam, *cam, colors[i]);
-        double diff = .30;
+        float diff = .30;
         v1.z += diff;
         v2.z += diff;
         v3.z += diff;
@@ -87,7 +87,7 @@ void test_gl_3d_view_matrix(void) {
     point_t v2 = {100, 100, 10};
     point_t v3 = {150, 0, 10};
 
-    double arr[16] = {1, 0, 0, 0,
+    float arr[16] = {1, 0, 0, 0,
                       0, 1, 0, 0,
                       0, 0, 1, 0,
                       0, 0, -10, 1};
@@ -101,7 +101,7 @@ void test_gl_3d_view_matrix(void) {
     point_t v2 = {10, 10, 0};
     point_t v3 = {15, 0, 0};
 
-    double y_rot = -PI/6.0;
+    float y_rot = -PI/6.0;
     matrix_4_t cam;
     cam.m = {cos(y_rot), 0, sin(y_rot), 10,
                     0, 1, 0, 5,
@@ -117,7 +117,7 @@ void test_gl_3d_z_buf(void){
     point_t v2 = {.5, 0, 1};
     point_t v3 = {-.5, 0, 1};
 
-    double arr[16] = {1, 0, 0, 0,
+    float arr[16] = {1, 0, 0, 0,
                       0, 1, 0, 0,
                       0, 0, 1, 0,
                       0, 0, -1, 1};
@@ -136,7 +136,7 @@ void test_gl_3d_z_buf(void){
 }
 
 void test_gl_3d_shading(void){
-    color_t compute_shade(color_t c, double brightness);
+    color_t compute_shade(color_t c, float brightness);
     printf("%x\n", compute_shade(0xffee0000, .5));
     printf("should be: 0xff770000\n");
     printf("%x\n", compute_shade(0xffee2266, .5));

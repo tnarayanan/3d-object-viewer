@@ -2,7 +2,7 @@
 #include "printf.h"
 #include "assert.h"
 
-double sin(double angle) {
+float sin(float angle) {
     int multiplier = 1;
     if (angle < 0) {
         multiplier = -1;
@@ -26,11 +26,11 @@ double sin(double angle) {
 
     // angle is now between -PI/2 and PI/2
 
-    double result = 0;
+    float result = 0;
 
     // Taylor series
     for (int i = 1; i <= 7; i += 2) {
-        double curr_iteration_result = 1;
+        float curr_iteration_result = 1;
         for (int k = 1; k <= i; k++) {
             curr_iteration_result *= angle;
             curr_iteration_result /= k;
@@ -42,11 +42,11 @@ double sin(double angle) {
     return multiplier * result;
 }
 
-double sqrt(double x) {
+float sqrt(float x) {
     assert(x >= 0);
 
-    double ans = x / 2;
-    double tmp = 0;
+    float ans = x / 2;
+    float tmp = 0;
 
     while (ans != tmp) {
         tmp = ans;
