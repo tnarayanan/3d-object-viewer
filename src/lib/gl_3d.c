@@ -75,10 +75,6 @@ static float min(float a, float b, float c){
     return min;
 }
 
-/*static void print_point(point_t v) {
-    printf("Point: {%d, %d, %d}\n", (int) (10000 * v.x), (int) (10000 * v.y), (int) (10000 * v.z));
-}*/
-
 static point_t convert_to_pixels(point_t p) {
     int width = gl_get_width();
     int height = gl_get_height();
@@ -103,7 +99,7 @@ void gl_3d_draw_triangle_with_normal(point_t v1, point_t v2, point_t v3, point_t
     point_t light_vec = {-light.m[0][2], -light.m[1][2], -light.m[2][2]};
 
     float cos_normal_light = vector_dot_product(normal, light_vec) / (vector_magnitude(normal) * vector_magnitude(light_vec));
-    //printf("Cos normal: %d\n", (int) (10000 * cos_normal_light));
+
     if (cos_normal_light < 0) cos_normal_light = 0;
     c = compute_shade(c, cos_normal_light);
 
@@ -166,6 +162,8 @@ void gl_3d_draw_triangle(point_t v1, point_t v2, point_t v3, matrix_4_t cam, mat
     int box_y_max = max(v1.y, v2.y, v3.y) >= height/2 ? height/2 : max(v1.y, v2.y, v3.y);
     
     
+    // uncomment for wireframe
+
     //gl_draw_line(v1.x + width/2, -v1.y + height/2, v2.x + width/2, -v2.y + height/2, GL_RED);
     //gl_draw_line(v2.x + width/2, -v2.y + height/2, v3.x + width/2, -v3.y + height/2, GL_RED);
     //gl_draw_line(v3.x + width/2, -v3.y + height/2, v1.x + width/2, -v1.y + height/2, GL_RED);
@@ -181,16 +179,12 @@ void gl_3d_draw_triangle(point_t v1, point_t v2, point_t v3, matrix_4_t cam, mat
                 point_t point = {box_x, box_y, 1};
                 unsigned int pixel_x = box_x + width/2;
                 unsigned int pixel_y = -box_y + height/2;
+
                 float z = compute_depth(v1, v2, v3, point);
-                //printf("%d\n", (int)(z*10000));
-                //printf("%x\n", z_buf_2d[pixel_y][pixel_x]);
                 if (z < z_buf_2d[pixel_y][pixel_x]) {
                     z_buf_2d[pixel_y][pixel_x] = z;
-                    //printf("%x\n", (int)z_buf_2d[pixel_y][pixel_x]);
                     im[pixel_y][pixel_x] = c; 
-                    //gl_draw_pixel(pixel_x, pixel_y, c);
                 }
-                //printf("Position %d %d\n", box_x, box_y);
             }
         }
     }

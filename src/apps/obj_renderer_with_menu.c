@@ -37,7 +37,7 @@ void initialize_matrices(void) {
     cube_light = transform_rotate_x(cube_light, PI/3);
 
     initial_cube_params = (initial_view_params_t) {
-        PI/6,
+            PI/6,
             0,
             5,
             PI/4,
@@ -50,7 +50,7 @@ void initialize_matrices(void) {
     monkey_light = transform_rotate_x(monkey_light, PI/6);
 
     initial_monkey_params = (initial_view_params_t) {
-        0,
+            0,
             0,
             0,
             PI,
@@ -63,7 +63,7 @@ void initialize_matrices(void) {
     wolf_light = transform_rotate_x(wolf_light, PI/6);
 
     initial_wolf_params = (initial_view_params_t) {
-        PI/8,
+            PI/8,
             0,
             3,
             3*PI/4,
@@ -207,7 +207,7 @@ void main(void) {
 
     unsigned int line_height = gl_get_char_height() + 5;
 
-    gl_draw_string(CURSOR_COL_WIDTH, 0, "3DOVE (3D Object ViewEr)", GL_AMBER);
+    gl_draw_string(CURSOR_COL_WIDTH, 0, "Welcome to 3DOVE (3D Object ViewEr)", GL_AMBER);
     gl_draw_string(CURSOR_COL_WIDTH, line_height, "Choose a file:", GL_AMBER);
 
     unsigned int line_offset = 3; // 3 lines at the top
