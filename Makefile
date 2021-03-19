@@ -6,7 +6,7 @@ MY_MODULES = gpu.o gpu_programs.o math.o vector_math.o gl_3d.o obj_parser.o tran
 
 # Targets for this makefile
 APPLICATION = build/obj_renderer_with_menu.bin
-TEST 	    = build/test_obj_parser.bin
+TEST 	    = build/test_math.bin
 TINYASM		= tinyasm/build/gpu_blink.bin
 
 all: $(APPLICATION) $(TEST) $(TINYASM)
