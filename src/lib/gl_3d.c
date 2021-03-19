@@ -35,28 +35,26 @@ color_t compute_shade(color_t c, double brightness) {
 }
 
 void draw_z_buf() {
-    unsigned int *disp_z_buf = malloc(sizeof(unsigned int) * gl_get_width() * gl_get_height());
-    memcpy(disp_z_buf, z_buf, sizeof(unsigned int) * gl_get_width() * gl_get_height());
     int size = gl_get_width() * gl_get_height();
+    float max = 0;
+    float min = INFINITY;
     for(int i = 0; i < size; i++){
-        if (disp_z_buf[i] == INFINITY) disp_z_buf[i] = 25;
-        disp_z_buf[i] = compute_shade(GL_WHITE, 1 - (disp_z_buf[i]/25)); 
+        if (z_buf[i] != INFINITY && z_buf[i] > max) max = z_buf[i];
+	if (z_buf[i] < min) min = z_buf[i];
     }
-    /*
+    printf("%d, %d \n", (int)max, (int)min);
     int height = gl_get_height();
-    int pitch = fb_get_pitch();
     int width = gl_get_width();
     unsigned int *fb = fb_get_draw_buffer();
     for (int y = 0; y < height; y++){
         for (int x = 0; x < width; x++){
-            fb[y*pitch + x] = disp_z_buf[y*width + x];
-        }
+	    if (z_buf[y * width + x] == INFINITY){
+	        fb[y*width + x] = GL_BLACK;
+	    } else {
+                fb[y*width + x] = compute_shade(GL_WHITE, 1 - .7*((z_buf[y * width + x]-min) / (max-min)));
+	    }
+        } 
     }
-    */
-    memcpy(fb_get_draw_buffer(), disp_z_buf, sizeof(unsigned int) * gl_get_width() * gl_get_height());  
-    //printf("zbuf");
-    free(disp_z_buf);
-    return;
 }
 
 static float edge(point_t v1, point_t v2, point_t p){
