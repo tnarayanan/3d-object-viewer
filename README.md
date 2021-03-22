@@ -1,23 +1,30 @@
 # 3DOVE: 3D Object Viewer
 
-## Team members
-Ari Webb, Tejas Narayanan
+A 3D object viewer that runs on a bare-metal Raspberry Pi (no standard libraries).
 
-## Project description
-A 3D object viewer that reads a .obj file and displays the 3D model.
-Users can rotate the camera around the model, as well as zoom in/out.
+Created for the Stanford CS107e final project (Winter 2021).
 
-## Member contribution
-**Ari**
-* Triangle drawing
-* Z-buffering
-* Lighting calculations
+## Contributors
+Ari Webb [(AriWebb)](https://github.com/AriWebb)
+Tejas Narayanan [(tnarayanan)](https://github.com/tnarayanan)
 
-**Tejas**
-* Math and linear algebra libraries
-* .obj file parsing
-* Linear transformation library
-* GPU library (unused)
+## Features
+* Fast triangle rendering using z-buffers
+* Directional lighting
+* Loading .obj files from file system
+* Moving camera around model using arrow keys
+
+**Upcoming**
+* GPU acceleration
+
+## Dependencies
+
+Requires the [`libpi.a`](https://github.com/cs107e/cs107e.github.io/blob/master/cs107e/lib/libpi.a) set of libraries built in CS107e, which includes implementations of standard library methods as well as some extras:
+* Strings (`strlen`, `strlcat`, `printf`)
+* Memory (`memset`, `memcpy`, `malloc`)
+* GPIO
+* Graphics (mailbox, framebuffer, drawing)
+* Keyboard (PS2 interface)
 
 ## References
 
@@ -45,19 +52,6 @@ Users can rotate the camera around the model, as well as zoom in/out.
 * Example program to peek/poke a memory address using the GPU: https://github.com/ali1234/vcpoke
   * Used this code to understand the process of executing a program on the GPU. No code was taken from this repository.
 
-## Self-evaluation
-
-We were able to meet all of our main goals for the project! The final renderer is
-both faster and more accurate than we expected it to be. We learned a lot about
-how different rendering techniques, such as z-buffering and perspective projection,
-are implemented.
-
-Seeing the cube and monkey render correctly for the first time was a wonderful moment!
-
-We unfortunately didn't have enough time to translate the rendering to GPU assembly
-to improve rendering speed, but we were able to make the viewer interactive. Users can use
-the arrow keys to move the camera around the model.
-
 ## Photos
 
 Video demo: https://drive.google.com/file/d/1jsQI91-H1OuIeEY4wmy1Li1u-xQmRkDC/view?usp=sharing
@@ -74,3 +68,4 @@ camera than darker colors.
 
 A deer:
 ![Deer](images/deer.jpg)
+
