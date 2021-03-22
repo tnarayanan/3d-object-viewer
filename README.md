@@ -5,8 +5,9 @@ A 3D object viewer that runs on a bare-metal Raspberry Pi (no standard libraries
 Created for the Stanford CS107e final project (Winter 2021).
 
 ## Contributors
-Ari Webb [(AriWebb)](https://github.com/AriWebb)
-Tejas Narayanan [(tnarayanan)](https://github.com/tnarayanan)
+Ari Webb ([AriWebb](https://github.com/AriWebb))
+
+Tejas Narayanan ([tnarayanan](https://github.com/tnarayanan))
 
 ## Features
 * Fast triangle rendering using z-buffers
@@ -19,7 +20,7 @@ Tejas Narayanan [(tnarayanan)](https://github.com/tnarayanan)
 
 ## Dependencies
 
-Requires the [`libpi.a`](https://github.com/cs107e/cs107e.github.io/blob/master/cs107e/lib/libpi.a) set of libraries built in CS107e, which includes implementations of standard library methods as well as some extras:
+Requires the [`libpi`](http://cs107e.github.io/header) set of libraries built in CS107e, which includes implementations of standard library methods as well as some extras:
 * Strings (`strlen`, `strlcat`, `printf`)
 * Memory (`memset`, `memcpy`, `malloc`)
 * GPIO
